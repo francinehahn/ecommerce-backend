@@ -1,17 +1,11 @@
-import { Request, Response } from "express"
+/*import { Request, Response } from "express"
+import User from "../class/User"
+import UserDatabase from "../class/UserDatabase"
 import { connection } from "../database/connection"
 import { getUserByEmail } from "../functions/getUserByEmail"
 import { getUserById } from "../functions/getUserById"
 
-//Function that updates user info
-const updateInfo = async (id: string, email: string, password: string) => {
-    await connection.raw(`
-        UPDATE Labecommerce_users SET email = '${email}', password = '${password}'
-        WHERE id = '${id}';
-    `)
-}
 
-//Endpoint
 export const editUserInfo = async (req: Request, res: Response) => {
     const id = req.params.id
     let {email, password} = req.body
@@ -46,10 +40,17 @@ export const editUserInfo = async (req: Request, res: Response) => {
             password = result[0].password
         }
 
-        await updateInfo(id, email, password)
+        const user = await getUserById(id)
+        const name = user[0].name
+
+        const newUserInfo = new User(id, name, email, password)
+        const editUserDB = new UserDatabase(connection)
+        console.log(newUserInfo)
+        editUserDB.updateInfo(newUserInfo)
+        
         res.status(201).send('Success! User information has been edited!')
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)
     }
-}
+}*/

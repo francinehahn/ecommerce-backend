@@ -1,17 +1,9 @@
-import { Request, Response } from "express"
+/*import { Request, Response } from "express"
 import { connection } from "../database/connection"
 import { getProductById } from "../functions/getProductById"
+import ProductDatabase from "../class/ProductDatabase"
+import Product from "../class/Product"
 
-
-//Function that updates product info
-const updateInfo = async (id: string, name: string, price: number, image_url: string) => {
-    await connection.raw(`
-        UPDATE Labecommerce_products SET name = '${name}', price = ${price}, image_url = '${image_url}'
-        WHERE id = '${id}';
-    `)
-}
-
-//Endpoint
 export const editProductInfo = async (req: Request, res: Response) => {
     const id = req.params.id
     let {name, price, image_url} = req.body
@@ -45,10 +37,14 @@ export const editProductInfo = async (req: Request, res: Response) => {
             image_url = result[0].image_url
         }
 
-        await updateInfo(id, name, price, image_url)
+
+        const newProductInfo: Product = {id, name, price, image_url}
+        const editProductDB = new ProductDatabase(connection)
+        editProductDB.updateInfo(newProductInfo)
+        
         res.status(201).send('Success! Product information has been edited!')
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)
     }
-}
+}*/

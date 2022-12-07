@@ -1,16 +1,9 @@
 import { Request, Response } from "express"
 import { connection } from "../database/connection"
+import UserDatabase from "../class/UserDatabase"
 import { getUserByEmail } from "../functions/getUserByEmail"
+import User from "../class/User"
 
-//Function to register the user
-const postUser = async (id: string, name: string, email: string, password: string) => {
-    await connection.raw(`
-        INSERT INTO Labecommerce_users
-        VALUES ('${id}', '${name}', '${email}', '${password}');
-    `)
-}
-
-//Endpoint
 export const createAccount = async (req: Request, res: Response) => {
     const {name, email, password} = req.body
     let errorCode = 400
@@ -37,7 +30,11 @@ export const createAccount = async (req: Request, res: Response) => {
             throw new Error("User already registered.")
         }
 
-        await postUser(Date.now().toString(), name, email, password)
+        const id = Date.now().toString()
+        const newUser = new User(id, name, email, password)
+        const userDB = new UserDatabase(connection)
+        userDB.insertUser(newUser)
+        
         res.status(201).send('Success! User has been registered!')
 
     } catch (err: any) {
