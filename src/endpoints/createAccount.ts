@@ -1,14 +1,13 @@
 import { Request, Response } from "express"
-import { connection } from "../database/connection"
 import UserDatabase from "../class/UserDatabase"
-import { getUserByEmail } from "../functions/getUserByEmail"
 import User from "../class/User"
 
 export const createAccount = async (req: Request, res: Response) => {
-    const {name, email, password} = req.body
     let errorCode = 400
 
     try {
+        const {name, email, password} = req.body
+
         if (!name && !email && !password) {
             errorCode = 422
             throw new Error("Provide user name, email and password.")
@@ -23,7 +22,8 @@ export const createAccount = async (req: Request, res: Response) => {
             throw new Error("Provide the password.")
         }
 
-        const userExists = await getUserByEmail(email)
+        const user = new UserDatabase()
+        const userExists = await user.getUserByEmail(email)
         
         if (userExists.length > 0) {
             errorCode = 422
@@ -32,8 +32,8 @@ export const createAccount = async (req: Request, res: Response) => {
 
         const id = Date.now().toString()
         const newUser = new User(id, name, email, password)
-        const userDB = new UserDatabase(connection)
-        userDB.insertUser(newUser)
+        const insertUser = new UserDatabase()
+        insertUser.insertUser(newUser.getId(), newUser.getName(), newUser.getEmail(), newUser.getPassword())
         
         res.status(201).send('Success! User has been registered!')
 

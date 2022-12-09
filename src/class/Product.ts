@@ -10,4 +10,20 @@ export default class Product {
         this.price = p
         this.image_url = i
     }
+
+    public getId() {
+        return this.id
+    }
+
+    public getName() {
+        return this.name
+    }
+
+    public getPrice() {
+        return this.price
+    }
+
+    public getImage() {
+        return this.image_url
+    }
 }

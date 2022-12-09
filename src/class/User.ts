@@ -10,4 +10,20 @@ export default class User {
         this.email = e
         this.password = p
     }
+
+    public getId () {
+        return this.id
+    }
+
+    public getName () {
+        return this.name
+    }
+
+    public getEmail () {
+        return this.email
+    }
+
+    public getPassword () {
+        return this.password
+    }
 }

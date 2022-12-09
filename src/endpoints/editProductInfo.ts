@@ -1,21 +1,21 @@
-/*import { Request, Response } from "express"
-import { connection } from "../database/connection"
-import { getProductById } from "../functions/getProductById"
+import { Request, Response } from "express"
 import ProductDatabase from "../class/ProductDatabase"
-import Product from "../class/Product"
+
 
 export const editProductInfo = async (req: Request, res: Response) => {
-    const id = req.params.id
-    let {name, price, image_url} = req.body
     let errorCode = 400
 
     try {
+        const id = req.params.id
+        let {name, price, image_url} = req.body
+
         if (id === ':id') {
             errorCode = 422
             throw new Error("Provide product id.")
         }
 
-        const productExists = await getProductById(id)
+        const product = new ProductDatabase()
+        const productExists = await product.getProductById(id)
 
         if (productExists.length === 0) {
             errorCode = 404
@@ -23,28 +23,22 @@ export const editProductInfo = async (req: Request, res: Response) => {
         }
         
         if (!name) {
-            const result = await getProductById(id)
-            name = result[0].name
+            name = productExists[0].name
         }
         
         if (!price) {
-            const result = await getProductById(id)
-            price = result[0].price
+            price = productExists[0].price
         }
 
         if (!image_url) {
-            const result = await getProductById(id)
-            image_url = result[0].image_url
+            image_url = productExists[0].image_url
         }
 
-
-        const newProductInfo: Product = {id, name, price, image_url}
-        const editProductDB = new ProductDatabase(connection)
-        editProductDB.updateInfo(newProductInfo)
+        await product.updateInfo(id, name, price, image_url)
         
         res.status(201).send('Success! Product information has been edited!')
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)
     }
-}*/
+}

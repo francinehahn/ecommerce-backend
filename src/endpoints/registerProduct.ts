@@ -1,20 +1,13 @@
 import { Request, Response } from "express"
-import { connection } from "../database/connection"
+import Product from "../class/Product"
+import ProductDatabase from "../class/ProductDatabase"
 
-//Function that registers a product
-const postProduct = async (id: string, name: string, price: number, image_url: string) => {
-    await connection.raw(`
-        INSERT INTO Labecommerce_products
-        VALUES ('${id}', '${name}', ${price}, '${image_url}');
-    `)
-}
-
-//Endpoint
 export const registerProduct = async (req: Request, res: Response) => {
-    const {name, price, image_url} = req.body
     let errorCode = 400
 
     try {
+        const {name, price, image_url} = req.body
+
         if (!name && !price && !image_url) {
             errorCode = 422
             throw new Error("Provide the product name, price and image url.")
@@ -32,7 +25,9 @@ export const registerProduct = async (req: Request, res: Response) => {
             throw new Error("Provide a valid price.")
         }
 
-        await postProduct(Date.now().toString(), name, price, image_url)
+        const newProduct = new Product(Date.now().toString(), name, price, image_url)
+        const insertProduct = new ProductDatabase()
+        await insertProduct.postProduct(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getImage())
         res.status(201).send('Success! The product has been registerd!')
 
     } catch (err: any) {

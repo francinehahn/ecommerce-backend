@@ -1,23 +1,16 @@
 import { Request, Response } from "express"
-import { connection } from "../database/connection"
-import { getProductById } from "../functions/getProductById"
-import { getUserById } from "../functions/getUserById"
+import ProductDatabase from "../class/ProductDatabase"
+import Purchase from "../class/Purchase"
+import PurchaseDatabase from "../class/PurchaseDatabase"
+import UserDatabase from "../class/UserDatabase"
 
 
-//Function to insert values into the table
-const insertPurchase = async (id: string, user_id: string, product_id: string, quantity: number, price: number) => {
-    await connection.raw(`
-        INSERT INTO Labecommerce_purchases
-        VALUES('${id}', '${user_id}', '${product_id}', ${quantity}, ${price});
-    `)
-}
-
-//Endpoint
 export const makePurchase = async (req: Request, res: Response) => {
-    const {user_id, product_id, quantity} = req.body
     let errorCode = 400
 
     try {
+        const {user_id, product_id, quantity} = req.body
+
         if (!user_id && !product_id && !quantity) {
             errorCode = 422
             throw new Error("Provide the user id, the product id and the quantity.")
@@ -35,14 +28,16 @@ export const makePurchase = async (req: Request, res: Response) => {
             throw new Error("Provide a quantity that is higher than zero.")
         }
 
-        const userExists = await getUserById(user_id)
+        const user = new UserDatabase()
+        const userExists = await user.getUserById(user_id)
 
         if (userExists.length === 0) {
             errorCode = 422
             throw new Error("User id does not exist.")
         }
 
-        const productExists = await getProductById(product_id)
+        const product = new ProductDatabase()
+        const productExists = await product.getProductById(product_id)
 
         if (productExists.length === 0) {
             errorCode = 422
@@ -52,7 +47,11 @@ export const makePurchase = async (req: Request, res: Response) => {
         const id = Date.now().toString()
         const totalPrice = Number(quantity) * Number(productExists[0].price)
 
-        await insertPurchase(id, user_id, product_id, quantity, Number(totalPrice.toFixed(2)))
+        const newPurchase = new Purchase(id, user_id, product_id, quantity, Number(totalPrice.toFixed(2)))
+        const insertPurchase = new PurchaseDatabase()
+        
+        await insertPurchase.insertPurchase(newPurchase.getId(), newPurchase.getUserId(), newPurchase.getProductId(), newPurchase.getQuantity(), newPurchase.getTotalPrice())
+        
         res.status(201).send('Success! Purchase has been registered!')
 
     } catch (err: any) {

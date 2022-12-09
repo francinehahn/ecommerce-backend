@@ -24,11 +24,11 @@ app.get('/users/:user_id/purchases', getPurchasesById)
 //Get All Products
 app.get('/products', getAllProducts)
 
-//Make a purchase
+//Register a product
 app.post('/products', registerProduct)
 
 //Edit product info
 app.put('/products/:id', editProductInfo)
 
-//Purchase Record
+//Make a purchase
 app.post('/purchases', makePurchase)

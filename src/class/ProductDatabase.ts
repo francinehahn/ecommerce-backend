@@ -1,30 +1,78 @@
-import {Knex} from "knex"
+import Database from "./Database"
 import Product from "./Product"
 
 
-export default class ProductDatabase {
-    constructor(private connection: Knex) {
-        this.connection = connection
-    }
+export default class ProductDatabase extends Database {
 
     public async insertProduct(newProduct: Product) {
-        await this.connection.raw(`
+        await Database.connection.raw(`
             INSERT INTO Labecommerce_products VALUES(${newProduct});
         `)
     }
 
-    /*public async updateInfo (newProductInfo: Product) {
-        await this.connection.raw(`
+    public async updateInfo (id: string, name: string, price: number, image_url: string) {
+        await Database.connection.raw(`
             UPDATE Labecommerce_products
-            SET name = '${newProductInfo.name}', price = ${newProductInfo.price}, image_url = '${newProductInfo.image_url}'
-            WHERE id = '${newProductInfo.id}';
+            SET name = '${name}', price = ${price}, image_url = '${image_url}'
+            WHERE id = '${id}';
         `)
-    }*/
+    }
 
     public async getProducts() {
-        const result = await this.connection.raw(`
+        const result = await Database.connection.raw(`
             SELECT * FROM Labecommerce_products;
         `)
-        return result
+        return result[0]
     }
+
+    public async getProductById(id: string) {
+        const result = await Database.connection.raw(`
+            SELECT * FROM Labecommerce_products WHERE id = '${id}';
+        `)
+        return result[0]
+    }
+
+    //Method that returns all products without any sorting filter
+    public async selectAllProducts () {
+        const result = await Database.connection.raw(`
+            SELECT * FROM Labecommerce_products;
+        `)
+
+        return result[0]
+    }
+
+    //Method that returns all products in order (asc or desc)
+    public async selectAllProductsOrderedBy (order: string) {
+        const result = await Database.connection.raw(`
+            SELECT * FROM Labecommerce_products ORDER BY name ${order};
+        `)
+
+        return result[0]
+    }
+
+    //Method that filters products by name
+    public async searchProducts (search: string) {
+        const result = await Database.connection.raw(`
+            SELECT * FROM Labecommerce_products WHERE name LIKE '%${search}%';
+        `)
+
+        return result[0]
+    }
+
+    //Method that returns products by the name and in order
+    public async searchProductsAndOrder (search: string, order: string) {
+        const result = await Database.connection.raw(`
+            SELECT * FROM Labecommerce_products WHERE name LIKE '%${search}%' ORDER BY name ${order};
+        `)
+
+        return result[0]
+    }
+
+    //Method that registers a product
+    public async postProduct (id: string, name: string, price: number, image_url: string) {
+        await Database.connection.raw(`
+            INSERT INTO Labecommerce_products
+            VALUES ('${id}', '${name}', ${price}, '${image_url}');
+        `)
+}
 }
