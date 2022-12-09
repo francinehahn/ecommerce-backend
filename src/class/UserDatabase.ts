@@ -2,12 +2,14 @@ import Database from "./Database"
 
 
 export default class UserDatabase extends Database {
+    //Method that inserts a new user into the database
     public async insertUser(id: string, name: string, email: string, password: string) {
         await Database.connection.raw(`
             INSERT INTO Labecommerce_users VALUES('${id}', '${name}', '${email}', '${password}');
         `)
     }
 
+    //Method that updates user information
     public async updateInfo (id: string, email: string, password: string) {
         await Database.connection.raw(`
             UPDATE Labecommerce_users SET email = '${email}', password = '${password}'
@@ -15,13 +17,7 @@ export default class UserDatabase extends Database {
         `)
     }
 
-    public async getUsers() {
-        const result = await Database.connection.raw(`
-            SELECT * FROM Labecommerce_users;
-        `)
-        return result[0]
-    }
-
+    //Method that receives an id and returns the corresponding user
     public async getUserById(id: string) {
         const result = await Database.connection.raw(`
             SELECT * FROM Labecommerce_users WHERE id = '${id}';
@@ -29,6 +25,7 @@ export default class UserDatabase extends Database {
         return result[0]
     }
 
+    //Method that receives an email and returns the corresponding user
     public async getUserByEmail(email: string) {
         const result = await Database.connection.raw(`
             SELECT * FROM Labecommerce_users WHERE email = '${email}';

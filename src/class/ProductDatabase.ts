@@ -3,13 +3,7 @@ import Product from "./Product"
 
 
 export default class ProductDatabase extends Database {
-
-    public async insertProduct(newProduct: Product) {
-        await Database.connection.raw(`
-            INSERT INTO Labecommerce_products VALUES(${newProduct});
-        `)
-    }
-
+    //Method that updates the product information in the database
     public async updateInfo (id: string, name: string, price: number, image_url: string) {
         await Database.connection.raw(`
             UPDATE Labecommerce_products
@@ -18,6 +12,7 @@ export default class ProductDatabase extends Database {
         `)
     }
 
+    //Method that returns all products registered in the database
     public async getProducts() {
         const result = await Database.connection.raw(`
             SELECT * FROM Labecommerce_products;
@@ -25,6 +20,7 @@ export default class ProductDatabase extends Database {
         return result[0]
     }
 
+    //Method that receives an id and returns the corresponding product
     public async getProductById(id: string) {
         const result = await Database.connection.raw(`
             SELECT * FROM Labecommerce_products WHERE id = '${id}';
@@ -68,7 +64,7 @@ export default class ProductDatabase extends Database {
         return result[0]
     }
 
-    //Method that registers a product
+    //Method that inserts a new product into the databate
     public async postProduct (id: string, name: string, price: number, image_url: string) {
         await Database.connection.raw(`
             INSERT INTO Labecommerce_products

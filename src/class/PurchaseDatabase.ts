@@ -10,7 +10,7 @@ export default class PurchaseDatabase extends Database {
         return result[0]
     }
 
-    //Method to insert values into the table
+    //Method that inserts values into the database
     public async insertPurchase (id: string, user_id: string, product_id: string, quantity: number, price: number) {
         await Database.connection.raw(`
             INSERT INTO Labecommerce_purchases

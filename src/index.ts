@@ -9,7 +9,7 @@ import { registerProduct } from "./endpoints/registerProduct"
 import { createAccount } from "./endpoints/createAccount"
 
 
-// Register user
+// Register a new user
 app.post('/users', createAccount)
 
 //Get All Users
