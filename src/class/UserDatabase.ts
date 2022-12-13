@@ -13,7 +13,7 @@ export default class UserDatabase extends BaseDatabase {
     //Method that updates user information
     public async updateInfo (id: string, email: string, password: string) {
         await BaseDatabase.connection.raw(`
-            UPDATE Labecommerce_users SET email = '${email}', password = '${password}'
+            UPDATE ${this.TABLE_NAME} SET email = '${email}', password = '${password}'
             WHERE id = '${id}';
         `)
     }
@@ -26,7 +26,7 @@ export default class UserDatabase extends BaseDatabase {
     //Method that receives an email and returns the corresponding user
     public async getUserByEmail(email: string) {
         const result = await BaseDatabase.connection.raw(`
-            SELECT * FROM Labecommerce_users WHERE email = '${email}';
+            SELECT * FROM ${this.TABLE_NAME} WHERE email = '${email}';
         `)
         return result[0]
     }
@@ -36,7 +36,7 @@ export default class UserDatabase extends BaseDatabase {
         let usersNewArray = []
         
         const users = await BaseDatabase.connection.raw(`
-            SELECT * FROM Labecommerce_users;
+            SELECT * FROM ${this.TABLE_NAME};
         `)
 
         for (let i = 0; i < users[0].length; i++) {
