@@ -29,7 +29,7 @@ export const makePurchase = async (req: Request, res: Response) => {
         }
 
         const user = new UserDatabase()
-        const userExists = await user.getUserById(user_id)
+        const userExists = await user.getById(user_id)
 
         if (userExists.length === 0) {
             errorCode = 422
@@ -37,7 +37,7 @@ export const makePurchase = async (req: Request, res: Response) => {
         }
 
         const product = new ProductDatabase()
-        const productExists = await product.getProductById(product_id)
+        const productExists = await product.getById(product_id)
 
         if (productExists.length === 0) {
             errorCode = 422
@@ -50,7 +50,7 @@ export const makePurchase = async (req: Request, res: Response) => {
         const newPurchase = new Purchase(id, user_id, product_id, quantity, Number(totalPrice.toFixed(2)))
         const insertPurchase = new PurchaseDatabase()
         
-        await insertPurchase.insertPurchase(newPurchase.getId(), newPurchase.getUserId(), newPurchase.getProductId(), newPurchase.getQuantity(), newPurchase.getTotalPrice())
+        await insertPurchase.insertPurchase(newPurchase)
         
         res.status(201).send('Success! Purchase has been registered!')
 

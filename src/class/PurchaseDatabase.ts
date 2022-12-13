@@ -1,9 +1,12 @@
-import Database from "./Database"
+import BaseDatabase from "./BaseDatabase"
+import Purchase from "./Purchase"
 
-export default class PurchaseDatabase extends Database {
+export default class PurchaseDatabase extends BaseDatabase {
+    TABLE_NAME = "Labecommerce_purchases"
+    
     //Method that returns all purchases from a user
     public async selectPurchases (user_id: string) {
-        const result = await Database.connection.raw(`
+        const result = await BaseDatabase.connection.raw(`
             SELECT * FROM Labecommerce_purchases WHERE user_id = '${user_id}';
         `)
 
@@ -11,10 +14,7 @@ export default class PurchaseDatabase extends Database {
     }
 
     //Method that inserts values into the database
-    public async insertPurchase (id: string, user_id: string, product_id: string, quantity: number, price: number) {
-        await Database.connection.raw(`
-            INSERT INTO Labecommerce_purchases
-            VALUES('${id}', '${user_id}', '${product_id}', ${quantity}, ${price});
-        `)
+    public async insertPurchase (purchase: Purchase) {
+        super.create(purchase)
     }
 }

@@ -15,7 +15,7 @@ export const editProductInfo = async (req: Request, res: Response) => {
         }
 
         const product = new ProductDatabase()
-        const productExists = await product.getProductById(id)
+        const productExists = await product.getById(id)
 
         if (productExists.length === 0) {
             errorCode = 404

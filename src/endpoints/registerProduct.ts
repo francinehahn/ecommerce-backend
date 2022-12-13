@@ -27,7 +27,7 @@ export const registerProduct = async (req: Request, res: Response) => {
 
         const newProduct = new Product(Date.now().toString(), name, price, image_url)
         const insertProduct = new ProductDatabase()
-        await insertProduct.postProduct(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getImage())
+        await insertProduct.createProduct(newProduct)
         res.status(201).send('Success! The product has been registerd!')
 
     } catch (err: any) {

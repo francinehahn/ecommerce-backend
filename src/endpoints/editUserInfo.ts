@@ -15,7 +15,7 @@ export const editUserInfo = async (req: Request, res: Response) => {
         }
 
         const user = new UserDatabase()
-        const userExists = await user.getUserById(id)
+        const userExists = await user.getById(id)
     
         if (userExists.length === 0) {
             errorCode = 404

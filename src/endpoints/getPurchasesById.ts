@@ -15,7 +15,7 @@ export const getPurchasesById = async (req: Request, res: Response) => {
         }
 
         const user = new UserDatabase()
-        const userExists = await user.getUserById(user_id)
+        const userExists = await user.getById(user_id)
 
         if (userExists.length === 0) {
             errorCode = 404

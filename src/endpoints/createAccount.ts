@@ -33,7 +33,7 @@ export const createAccount = async (req: Request, res: Response) => {
         const id = Date.now().toString()
         const newUser = new User(id, name, email, password)
         const insertUser = new UserDatabase()
-        insertUser.insertUser(newUser.getId(), newUser.getName(), newUser.getEmail(), newUser.getPassword())
+        insertUser.insertUser(newUser)
         
         res.status(201).send('Success! User has been registered!')
 
