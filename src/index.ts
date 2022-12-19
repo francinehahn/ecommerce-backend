@@ -7,6 +7,7 @@ import { getPurchasesById } from "./endpoints/getPurchasesById"
 import { makePurchase } from "./endpoints/makePurchase"
 import { registerProduct } from "./endpoints/registerProduct"
 import { createAccount } from "./endpoints/createAccount"
+import { getProductById } from "./endpoints/getProductById"
 
 
 // Register a new user
@@ -26,6 +27,9 @@ app.get('/products', getAllProducts)
 
 //Register a product
 app.post('/products', registerProduct)
+
+//Get product by id
+app.get('/products/:id', getProductById)
 
 //Edit product info
 app.put('/products/:id', editProductInfo)
