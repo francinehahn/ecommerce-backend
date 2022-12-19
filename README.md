@@ -9,6 +9,7 @@ https://documenter.getpostman.com/view/22375317/2s8Yt1r9BE
 ## ☑️Requests
 - Get All Users
 - Get All Products
+- Get Product By Id
 - Get Purchases By Id
 - Create Account
 - Register Product
