@@ -4,13 +4,15 @@ export default class Purchase {
     private product_id: string
     private quantity: number
     private total_price: number
+    private created_at: Date
     
-    constructor(id: string, ui: string, pi: string, q: number, tp: number) {
+    constructor(id: string, ui: string, pi: string, q: number, tp: number, ca: Date) {
         this.id = id
         this.user_id = ui
         this.product_id = pi
         this.quantity = q
         this.total_price = tp
+        this.created_at = ca
     }
 
     public getId () {
@@ -31,5 +33,9 @@ export default class Purchase {
 
     public getTotalPrice () {
         return this.total_price
+    }
+
+    public getPurchaseDate () {
+        return this.created_at
     }
 }

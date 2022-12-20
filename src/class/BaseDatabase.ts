@@ -26,7 +26,7 @@ export default abstract class BaseDatabase {
         return result[0]
     }
 
-    //Method that creates a new user
+    //Method that creates a new user/purchase
     protected async create (item: any) {
         await BaseDatabase.connection(this.TABLE_NAME).insert(item)
     }
