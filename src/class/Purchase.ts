@@ -14,28 +14,4 @@ export default class Purchase {
         this.total_price = tp
         this.created_at = ca
     }
-
-    public getId () {
-        return this.id
-    }
-
-    public getUserId () {
-        return this.user_id
-    }
-
-    public getProductId () {
-        return this.product_id
-    }
-
-    public getQuantity () {
-        return this.quantity
-    }
-
-    public getTotalPrice () {
-        return this.total_price
-    }
-
-    public getPurchaseDate () {
-        return this.created_at
-    }
 }

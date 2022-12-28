@@ -31,7 +31,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
                 const result = await products.selectAllProducts()
                 res.status(200).send(result)
             } else if (search) {
-                const result = await products.searchProducts(search.toString())
+                const result = await products.searchProducts("name", search.toString())
                 if (result.length === 0) {
                     errorCode = 422
                     throw new Error("Product not found.")

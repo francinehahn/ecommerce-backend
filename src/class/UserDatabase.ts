@@ -11,11 +11,8 @@ export default class UserDatabase extends BaseDatabase {
     }
 
     //Method that updates user information
-    public async updateInfo (id: string, email: string, password: string) {
-        await BaseDatabase.connection.raw(`
-            UPDATE ${this.TABLE_NAME} SET email = '${email}', password = '${password}'
-            WHERE id = '${id}';
-        `)
+    public async updateInfo (id: string, column: string, info: any) {
+        super.update(id, column, info)
     }
 
     //Method that receives an id and returns the corresponding user
@@ -27,6 +24,14 @@ export default class UserDatabase extends BaseDatabase {
     public async getUserByEmail(email: string) {
         const result = await BaseDatabase.connection.raw(`
             SELECT * FROM ${this.TABLE_NAME} WHERE email = '${email}';
+        `)
+        return result[0]
+    }
+
+    //Method that receives a token and returns the corresponding user
+    public async getUserByToken(token: string) {
+        const result = await BaseDatabase.connection.raw(`
+            SELECT * FROM ${this.TABLE_NAME} WHERE token = '${token}';
         `)
         return result[0]
     }

@@ -4,10 +4,10 @@ import Purchase from "./Purchase"
 export default class PurchaseDatabase extends BaseDatabase {
     TABLE_NAME = "Labecommerce_purchases"
     
-    //Method that returns all purchases from a user
-    public async selectPurchases (user_id: string) {
+    //Method that returns purchases 
+    public async selectPurchases (column: string, id: string) {
         const result = await BaseDatabase.connection.raw(`
-            SELECT * FROM ${this.TABLE_NAME} WHERE user_id = '${user_id}';
+            SELECT * FROM ${this.TABLE_NAME} WHERE ${column} = '${id}';
         `)
 
         return result[0]

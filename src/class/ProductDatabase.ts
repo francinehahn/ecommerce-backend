@@ -6,12 +6,8 @@ export default class ProductDatabase extends BaseDatabase {
     TABLE_NAME = "Labecommerce_products"
     
     //Method that updates the product information in the database
-    public async updateInfo (id: string, name: string, price: number, image_url: string) {
-        await BaseDatabase.connection.raw(`
-            UPDATE ${this.TABLE_NAME}
-            SET name = '${name}', price = ${price}, image_url = '${image_url}'
-            WHERE id = '${id}';
-        `)
+    public async updateInfo (id: string, column: string, info: any) {
+        super.update(id, column, info)
     }
 
     //Method that receives an id and returns the corresponding product
@@ -37,13 +33,21 @@ export default class ProductDatabase extends BaseDatabase {
         return result[0]
     }
 
-    //Method that filters products by name
-    public async searchProducts (search: string) {
-        const result = await BaseDatabase.connection.raw(`
-            SELECT * FROM ${this.TABLE_NAME} WHERE name LIKE '%${search}%';
-        `)
+    //Method that filters products
+    public async searchProducts (column: string, search: string) {
+        if (column === "name") {
+            const result = await BaseDatabase.connection.raw(`
+                SELECT * FROM ${this.TABLE_NAME} WHERE ${column} LIKE '%${search}%';
+            `)
 
-        return result[0]
+            return result[0]
+        } else {
+            const result = await BaseDatabase.connection.raw(`
+                SELECT * FROM ${this.TABLE_NAME} WHERE ${column} = '${search}';
+            `)
+
+            return result[0]
+        }
     }
 
     //Method that returns products by the name and in order

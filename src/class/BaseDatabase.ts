@@ -30,4 +30,9 @@ export default abstract class BaseDatabase {
     protected async create (item: any) {
         await BaseDatabase.connection(this.TABLE_NAME).insert(item)
     }
+
+    //Method that updates table info
+    protected async update (id: string, column: string, info: any) {
+        await BaseDatabase.connection(this.TABLE_NAME).update(column, info).where("id", id)
+    }
 }

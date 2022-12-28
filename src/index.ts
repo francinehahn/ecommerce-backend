@@ -3,11 +3,13 @@ import { editProductInfo } from "./endpoints/editProductInfo"
 import { editUserInfo } from "./endpoints/editUserInfo"
 import { getAllProducts } from "./endpoints/getAllProducts"
 import { getAllUsers } from "./endpoints/getAllUsers"
-import { getPurchasesById } from "./endpoints/getPurchasesById"
+import { getPurchasesByUserId } from "./endpoints/getPurchasesByUserId"
 import { makePurchase } from "./endpoints/makePurchase"
 import { registerProduct } from "./endpoints/registerProduct"
 import { createAccount } from "./endpoints/createAccount"
-import { getProductById } from "./endpoints/getProductById"
+import { getProductsByUserId } from "./endpoints/getProductsByUserId"
+import { login } from "./endpoints/login"
+import { getSalesByUserId } from "./endpoints/getSalesByUserId"
 
 
 // Register a new user
@@ -19,20 +21,26 @@ app.get('/users', getAllUsers)
 //Edit user info
 app.put('/users/:id/account', editUserInfo)
 
-//Get purchases by id
-app.get('/users/:user_id/purchases', getPurchasesById)
+//Get purchases by user id
+app.get('/users/:id/purchases', getPurchasesByUserId)
+
+//Get products by user id
+app.get('/users/:id/products', getProductsByUserId)
+
+//Get Sales By User Id
+app.get('/users/:id/sales', getSalesByUserId)
+
+//Register a product
+app.post('/users/:id/products', registerProduct)
 
 //Get All Products
 app.get('/products', getAllProducts)
-
-//Register a product
-app.post('/products', registerProduct)
-
-//Get product by id
-app.get('/products/:id', getProductById)
 
 //Edit product info
 app.put('/products/:id', editProductInfo)
 
 //Make a purchase
 app.post('/purchases', makePurchase)
+
+//Login
+app.post('/login', login)

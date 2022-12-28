@@ -8,6 +8,7 @@ export const editUserInfo = async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         let {email, password} = req.body
+        const token = req.headers.token
         
         if (id === ':id') {
             errorCode = 422
@@ -22,6 +23,11 @@ export const editUserInfo = async (req: Request, res: Response) => {
             throw new Error("User does not exist.")
         }
         
+        if (!token) {
+            errorCode = 422
+            throw new Error("Provide the token.")   
+        }
+
         if (!email) {
             email = userExists[0].email
         }
@@ -29,8 +35,14 @@ export const editUserInfo = async (req: Request, res: Response) => {
         if (!password) {
             password = userExists[0].password
         }
-        
-        await user.updateInfo(id, email, password)
+
+        if (token !== userExists[0].token) {
+            errorCode = 401
+            throw new Error("Invalid token.")
+        }
+
+        await user.updateInfo(id, "email", email)
+        await user.updateInfo(id, "password", password)
         
         res.status(201).send('Success! User information has been edited!')
 

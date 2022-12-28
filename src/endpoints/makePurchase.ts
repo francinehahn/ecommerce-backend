@@ -10,6 +10,12 @@ export const makePurchase = async (req: Request, res: Response) => {
 
     try {
         const {user_id, product_id, quantity} = req.body
+        const token = req.headers.token as string
+
+        if (!token) {
+            errorCode = 422
+            throw new Error("Provide the token.")            
+        }
 
         if (!user_id && !product_id && !quantity) {
             errorCode = 422
@@ -34,6 +40,12 @@ export const makePurchase = async (req: Request, res: Response) => {
         if (userExists.length === 0) {
             errorCode = 422
             throw new Error("User id does not exist.")
+        }
+
+        const userInfo = await user.getUserByToken(token)
+        if (userInfo[0].token !== token) {
+            errorCode = 401
+            throw new Error("Incorrect token.")
         }
 
         const product = new ProductDatabase()
