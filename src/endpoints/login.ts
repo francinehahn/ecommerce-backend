@@ -30,14 +30,15 @@ export async function login (req: Request, res: Response) {
             throw new Error("Incorrect password.")
         }
 
-        const token = () => {
+        const generateToken = () => {
             return Math.random().toString(36).slice(-10)
         }
         
+        const token = generateToken()
         const id = emailExists[0].id
-        await user.updateInfo(id, "token", token())
+        await user.updateInfo(id, "token", token)
 
-        res.status(200).send(token())
+        res.status(200).send(token)
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)
