@@ -19,8 +19,7 @@ export async function login (req: Request, res: Response) {
 
         const user = new UserDatabase()
         const emailExists = await user.getUserByEmail(email)
-        const id = emailExists[0].id
-
+        
         if (emailExists.length === 0) {
             errorCode = 422
             throw new Error("Email not found.")
@@ -35,6 +34,7 @@ export async function login (req: Request, res: Response) {
             return Math.random().toString(36).slice(-10)
         }
         
+        const id = emailExists[0].id
         await user.updateInfo(id, "token", token())
 
         res.status(200).send(token())
