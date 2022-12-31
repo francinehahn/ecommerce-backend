@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import ProductDatabase from "../class/ProductDatabase"
 import PurchaseDatabase from "../class/PurchaseDatabase"
 import UserDatabase from "../class/UserDatabase"
 
@@ -34,7 +35,13 @@ export const getPurchasesByUserId = async (req: Request, res: Response) => {
         }
 
         const purchases = new PurchaseDatabase()
-        const result = await purchases.selectPurchases("user_id", id)
+        let result = await purchases.selectPurchases("user_id", id)
+        
+        const product = new ProductDatabase()
+        for (let i = 0; i < result.length; i++) {
+            const productInfo = await product.getById(result[i].product_id)
+            result[i] = {...result[i], product_name: productInfo[0].name}
+        }
         
         if (result.length === 0) {
             errorCode = 200
