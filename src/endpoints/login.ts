@@ -38,7 +38,7 @@ export async function login (req: Request, res: Response) {
         const id = emailExists[0].id
         await user.updateInfo(id, "token", token)
 
-        res.status(200).send(token)
+        res.status(200).send({id, token})
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)
