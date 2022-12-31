@@ -42,11 +42,6 @@ export const getPurchasesByUserId = async (req: Request, res: Response) => {
             const productInfo = await product.getById(result[i].product_id)
             result[i] = {...result[i], product_name: productInfo[0].name}
         }
-        
-        if (result.length === 0) {
-            errorCode = 200
-            throw new Error("User has not made any purchases yet.")
-        }
 
         res.status(200).send(result)
 
