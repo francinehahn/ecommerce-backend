@@ -7,6 +7,7 @@ export async function getUserById (req: Request, res: Response) {
 
     try {
         const id = req.params.id
+        const token = req.headers.token
 
         if (id === ":id") {
             errorCode = 422
@@ -19,6 +20,16 @@ export async function getUserById (req: Request, res: Response) {
         if (idExists.length === 0) {
             errorCode = 404
             throw new Error("User id not found.")
+        }
+
+        if (!token) {
+            errorCode = 422
+            throw new Error("Provide the token.")
+        }
+
+        if (idExists.token !== token) {
+            errorCode = 401
+            throw new Error("Incorrect token.")
         }
 
         res.status(200).send(idExists[0])
