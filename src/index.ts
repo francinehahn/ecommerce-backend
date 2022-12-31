@@ -10,6 +10,7 @@ import { createAccount } from "./endpoints/createAccount"
 import { getProductsByUserId } from "./endpoints/getProductsByUserId"
 import { login } from "./endpoints/login"
 import { getSalesByUserId } from "./endpoints/getSalesByUserId"
+import { getUserById } from "./endpoints/getUserById"
 
 
 // Register a new user
@@ -17,6 +18,9 @@ app.post('/users', createAccount)
 
 //Get All Users
 app.get('/users', getAllUsers)
+
+//Get User By Id
+app.get('/users/:id', getUserById)
 
 //Edit user info
 app.put('/users/:id/account', editUserInfo)
