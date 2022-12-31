@@ -26,8 +26,8 @@ export async function getUserById (req: Request, res: Response) {
             errorCode = 422
             throw new Error("Provide the token.")
         }
-
-        if (idExists.token !== token) {
+    
+        if (idExists[0].token !== token) {
             errorCode = 401
             throw new Error("Incorrect token.")
         }
