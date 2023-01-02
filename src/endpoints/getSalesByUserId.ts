@@ -46,6 +46,11 @@ export async function getSalesByUserId (req: Request, res: Response) {
             arrayOfSales.push(...sales)
         }
         
+        for (let i = 0; i < arrayOfSales.length; i++) {
+            const productInfo: any = await products.getById(arrayOfSales[i].product_id)
+            arrayOfSales[i] = {...arrayOfSales[i], product_name: productInfo[0].name}
+        }
+        
         res.status(200).send(arrayOfSales)
 
     } catch (err: any) {
