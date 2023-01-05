@@ -9,7 +9,7 @@ export const makePurchase = async (req: Request, res: Response) => {
     let errorCode = 400
 
     try {
-        const {user_id, product_id, quantity} = req.body
+        const products = req.body
         const token = req.headers.token as string
 
         if (!token) {
@@ -17,25 +17,13 @@ export const makePurchase = async (req: Request, res: Response) => {
             throw new Error("Provide the token.")            
         }
 
-        if (!user_id && !product_id && !quantity) {
+        if (!products) {
             errorCode = 422
-            throw new Error("Provide the user id, the product id and the quantity.")
-        } else if (!user_id) {
-            errorCode = 422
-            throw new Error("Provide the user id.")
-        } else if (!product_id) {
-            errorCode = 422
-            throw new Error("Provide the product id.")
-        } else if (!quantity) {
-            errorCode = 422
-            throw new Error("Provide the quantity.")
-        } else if (Number(quantity) <= 0) {
-            errorCode = 422
-            throw new Error("Provide a quantity that is higher than zero.")
+            throw new Error("Provide the user_id, the product_id and the quantity of each product.")
         }
 
         const user = new UserDatabase()
-        const userExists = await user.getById(user_id)
+        const userExists = await user.getById(products[0].user_id)
 
         if (userExists.length === 0) {
             errorCode = 422
@@ -43,29 +31,32 @@ export const makePurchase = async (req: Request, res: Response) => {
         }
 
         const userInfo = await user.getUserByToken(token)
-        if (userInfo[0].token !== token) {
+        
+        if (userInfo.length === 0) {
             errorCode = 401
             throw new Error("Incorrect token.")
         }
 
         const product = new ProductDatabase()
-        const productExists = await product.getById(product_id)
+        for (let i = 0; i < products.length; i++) {
+            const productExists = await product.getById(products[i].product_id)
 
-        if (productExists.length === 0) {
-            errorCode = 422
-            throw new Error("Product id does not exist.")
+            if (productExists.length === 0) {
+                errorCode = 422
+                throw new Error("Product id does not exist.")
+            }
+
+            const id = Date.now().toString()
+            const totalPrice = Number(products[i].quantity) * Number(productExists[0].price)
+
+            const today = new Date().toISOString().toString().slice(0, 10)
+            
+            const newPurchase = new Purchase(id, products[i].user_id, products[i].product_id, products[i].quantity, Number(totalPrice.toFixed(2)), new Date(today))
+            const insertPurchase = new PurchaseDatabase()
+            
+            await insertPurchase.insertPurchase(newPurchase)
         }
-
-        const id = Date.now().toString()
-        const totalPrice = Number(quantity) * Number(productExists[0].price)
-
-        const today = new Date().toLocaleDateString("pt-br").toString().split("/").reverse().join("-")
-        
-        const newPurchase = new Purchase(id, user_id, product_id, quantity, Number(totalPrice.toFixed(2)), new Date(today))
-        const insertPurchase = new PurchaseDatabase()
-        
-        await insertPurchase.insertPurchase(newPurchase)
-        
+         
         res.status(201).send('Success! Purchase has been registered!')
 
     } catch (err: any) {
