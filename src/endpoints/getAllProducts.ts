@@ -6,40 +6,38 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let errorCode = 400
     
     try {
-        const {order, search} = req.query
-        const products = new ProductDatabase()
+        let order = req.query.order as string
+        let search = req.query.search as string
+        let size = Number(req.query.size)
+        let page = Number(req.query.page)
         
-        if (order) {
-            if (order !== 'asc' && order !== 'desc') {
-                errorCode = 422
-                throw new Error("The order must be asc or desc.")
-            } else if (!search) {
-                const result = await products.selectAllProductsOrderedBy(order)
-                res.status(200).send(result)
-            } else if (search) {
-                const result = await products.searchProductsAndOrder(search.toString(), order)
-                if (result.length === 0) {
-                    errorCode = 422
-                    throw new Error("Product not found.")
-                } else {
-                    res.status(200).send(result)
-                }
-            }
+        const products = new ProductDatabase()
 
-        } else {
-            if (!search) {
-                const result = await products.selectAllProducts()
-                res.status(200).send(result)
-            } else if (search) {
-                const result = await products.searchProducts("name", search.toString())
-                if (result.length === 0) {
-                    errorCode = 422
-                    throw new Error("Product not found.")
-                } else {
-                    res.status(200).send(result)
-                }
-            }
+        if (!order) {
+          order = "asc"  
         }
+
+        if (order.toLowerCase() !== 'asc' && order.toLowerCase() !== 'desc') {
+            errorCode = 422
+            throw new Error("The order must be asc or desc.")
+        }
+
+        if (!search) {
+            search = "%"
+        }
+
+        if (!size) {
+            size = -1
+        }
+
+        if (!page) {
+            page = -1
+        }
+
+        const offset = size * (page - 1)
+        const result = await products.selectAllProducts(`%${search}%`, "like", "name", order, size, offset)
+
+        res.status(200).send(result)
 
     } catch (err: any) {
         res.status(errorCode).send(err.message)

@@ -34,7 +34,7 @@ export async function getProductsByUserId (req: Request, res: Response) {
         }
 
         const products = new ProductDatabase()
-        const productsByUserId = await products.searchProducts("fk_userId", id)
+        const productsByUserId = await products.selectAllProducts(id, "=", "fk_userId", "asc", -1, 2)
         
         if (productsByUserId.length === 0) {
             errorCode = 200

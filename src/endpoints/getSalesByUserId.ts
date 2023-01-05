@@ -35,7 +35,7 @@ export async function getSalesByUserId (req: Request, res: Response) {
         }
 
         const products = new ProductDatabase()
-        const getAllProducts = await products.selectAllProducts()
+        const getAllProducts = await products.selectAllProducts("%%%", "like", "name", "asc", -1, 2)
         
         const purchases = new PurchaseDatabase()
         const productsRegisteredByUser = getAllProducts.filter((item: any) => item.fk_userId === id)
