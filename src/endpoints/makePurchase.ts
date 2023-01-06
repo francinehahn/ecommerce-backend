@@ -49,7 +49,7 @@ export const makePurchase = async (req: Request, res: Response) => {
             const id = Date.now().toString()
             const totalPrice = Number(products[i].quantity) * Number(productExists[0].price)
 
-            const today = new Date().toISOString().toString().slice(0, 10)
+            const today = new Date(Date.now()).toISOString().toString().slice(0, 10)
             
             const newPurchase = new Purchase(id, products[i].user_id, products[i].product_id, products[i].quantity, Number(totalPrice.toFixed(2)), new Date(today))
             const insertPurchase = new PurchaseDatabase()
