@@ -1,9 +1,10 @@
 import UserDatabase from "../data/UserDatabase"
 import { CustomError } from "../errors/CustomError"
-import { DuplicateEmail, EmailNotFound, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
+import { DuplicateEmail, EmailNotFound, IncorrectPassword, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
 import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, updateUserInfoDTO } from "../models/User"
 import { Authenticator } from "../services/Authenticator"
 import { generateId } from "../services/generateId"
+import { HashManager } from "../services/HashManager"
 
 
 export class UserBusiness {
@@ -33,8 +34,11 @@ export class UserBusiness {
                 throw new DuplicateEmail()
             }
     
+            const hashManager = new HashManager()
+            const hashPassword: string = await hashManager.generateHash(input.password)
+
             const id = generateId()
-            const newUser = new User(id, input.name, input.email, input.password)
+            const newUser = new User(id, input.name, input.email, hashPassword)
 
             await userDatabase.signup(newUser)
             
@@ -65,8 +69,11 @@ export class UserBusiness {
                 throw new EmailNotFound()
             }
         
-            if (input.password !== emailExists.password) {
-                throw new Error("Incorrect password.")
+            const hashManager = new HashManager()
+            const comparePassword = await hashManager.compareHash(input.password, emailExists.password)
+
+            if (!comparePassword) {
+                throw new IncorrectPassword()
             }
             
             const authenticator = new Authenticator()

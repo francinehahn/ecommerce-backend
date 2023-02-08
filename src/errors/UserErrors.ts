@@ -36,6 +36,12 @@ export class InvalidPassword extends CustomError {
     }
 }
 
+export class IncorrectPassword extends CustomError {
+    constructor () {
+        super(422, "Incorrect password.")
+    }
+}
+
 export class InvalidEmail extends CustomError {
     constructor () {
         super(422, "Invalid email.")

@@ -6,7 +6,7 @@ const createTables = () => connection.raw(`
         id CHAR(36) PRIMARY KEY,
         name VARCHAR(80) NOT NULL,
         email VARCHAR(50) NOT NULL,
-        password VARCHAR(30) NOT NULL
+        password VARCHAR(100) NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS Labecommerce_products (
