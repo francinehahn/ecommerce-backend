@@ -1,12 +1,13 @@
-import ProductDatabase from "../data/ProductDatabase"
 import { CustomError } from "../errors/CustomError"
 import { InvalidOrder, InvalidPrice, MissingImageUrl, MissingPrice, MissingProductId, MissingProductName, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
 import { MissingToken, Unauthorized } from "../errors/UserErrors"
 import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder, returnProductsDTO } from "../models/Product"
 import { Authenticator } from "../services/Authenticator"
+import { ProductRepository } from "./ProductRepository"
 
 
 export class ProductBusiness {
+    constructor (private productDatabase: ProductRepository) {}
 
     getProductsByUserId = async (token: string): Promise<returnProductsDTO[]> => {
         try {
@@ -17,8 +18,7 @@ export class ProductBusiness {
             const authenticator = new Authenticator()
             const {id} = await authenticator.getTokenData(token)
     
-            const productDatabase = new ProductDatabase()
-            const productsByUserId = await productDatabase.getProductsByUserId(id)
+            const productsByUserId = await this.productDatabase.getProductsByUserId(id)
             
             if (productsByUserId.length === 0) {
                 throw new NoProductsRegistered()
@@ -55,8 +55,7 @@ export class ProductBusiness {
     
             const newProduct = new Product(input.name, input.price, input.imageUrl, id)
 
-            const productDatabase = new ProductDatabase()
-            await productDatabase.createProduct(newProduct)
+            await this.productDatabase.createProduct(newProduct)
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
@@ -77,8 +76,7 @@ export class ProductBusiness {
                 throw new MissingProductId() 
             }
 
-            const productDatabase = new ProductDatabase()
-            const productExists = await productDatabase.getProductById(input.id)
+            const productExists = await this.productDatabase.getProductById(input.id)
 
             if (!productExists) {
                 throw new ProductNotFound()
@@ -100,7 +98,7 @@ export class ProductBusiness {
                 input.imageUrl = productExists.image_url
             }
 
-            await productDatabase.editProductInfo(input)
+            await this.productDatabase.editProductInfo(input)
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
@@ -139,9 +137,7 @@ export class ProductBusiness {
                 offset
             }
 
-            const productDatabase = new ProductDatabase()
-            const result = await productDatabase.getllProducts(getProducts)
-            
+            const result = await this.productDatabase.getllProducts(getProducts)
             return result
     
         } catch (err: any) {

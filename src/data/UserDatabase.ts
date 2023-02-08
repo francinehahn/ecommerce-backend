@@ -1,9 +1,10 @@
 import BaseDatabase from "./BaseDatabase"
 import User, { updateUserInfoDTO } from "../models/User"
 import { CustomError } from "../errors/CustomError"
+import { UserRepository } from "../business/UserRepository"
 
 
-export default class UserDatabase extends BaseDatabase {
+export default class UserDatabase extends BaseDatabase implements UserRepository {
     TABLE_NAME = "Labecommerce_users"
 
     signup = async (newUser: User): Promise<void> => {
@@ -18,8 +19,8 @@ export default class UserDatabase extends BaseDatabase {
     editUserInfo = async (userInfo: updateUserInfoDTO): Promise<void> => {
         try {
             await BaseDatabase.connection(this.TABLE_NAME)
-            .update({email: userInfo.email, password: userInfo.password})
             .where("id", userInfo.id)
+            .update({email: userInfo.email, password: userInfo.password})
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)

@@ -4,13 +4,13 @@ import { inputCreatePurchaseDTO } from "../models/Purchase"
 
 
 export class PurchaseController {
+    constructor (private purchaseBusiness: PurchaseBusiness) {}
 
     getPurchasesByUserId = async (req: Request, res: Response): Promise<void> => {
         try {
             const token = req.headers.authorization as string
         
-            const purchaseBusiness = new PurchaseBusiness()
-            const result = await purchaseBusiness.getPurchasesByUserId(token)
+            const result = await this.purchaseBusiness.getPurchasesByUserId(token)
             res.status(200).send(result)
     
         } catch (err: any) {
@@ -23,9 +23,7 @@ export class PurchaseController {
         try {
             const token = req.headers.authorization as string
             
-            const purchaseBusiness = new PurchaseBusiness()
-            const result = await purchaseBusiness.getSalesByUserId(token)
-
+            const result = await this.purchaseBusiness.getSalesByUserId(token)
             res.status(200).send(result)
     
         } catch (err: any) {
@@ -41,9 +39,7 @@ export class PurchaseController {
                 token: req.headers.authorization as string
             }
 
-            const purchaseBusiness = new PurchaseBusiness()
-            await purchaseBusiness.createPurchase(input)
-     
+            await this.purchaseBusiness.createPurchase(input)
             res.status(201).send('Success! Purchase has been registered!')
     
         } catch (err: any) {

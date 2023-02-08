@@ -1,9 +1,10 @@
 import BaseDatabase from "./BaseDatabase"
 import Product, { getProductsDTO, inputEditProductInfoDTO, returnProductsDTO } from "../models/Product"
 import { CustomError } from "../errors/CustomError"
+import { ProductRepository } from "../business/ProductRepository"
 
 
-export default class ProductDatabase extends BaseDatabase {
+export default class ProductDatabase extends BaseDatabase implements ProductRepository {
     TABLE_NAME = "Labecommerce_products"
     
     getProductsByUserId = async (id: string): Promise<returnProductsDTO[]> => {

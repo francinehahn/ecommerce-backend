@@ -4,13 +4,12 @@ import { inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO,
 
 
 export class ProductController {
+    constructor (private productBusiness: ProductBusiness) {}
 
     getProductsByUserId = async (req: Request, res: Response): Promise<void> => {
         try {
             const token = req.headers.authorization as string
-
-            const productBusiness = new ProductBusiness()
-            const result = await productBusiness.getProductsByUserId(token)
+            const result = await this.productBusiness.getProductsByUserId(token)
     
             res.status(200).send(result)
     
@@ -29,9 +28,7 @@ export class ProductController {
                 token: req.headers.authorization as string
             }
     
-            const productBusiness = new ProductBusiness()
-            await productBusiness.createProduct(input)
-            
+            await this.productBusiness.createProduct(input)
             res.status(201).send('Success! The product has been registerd!')
     
         } catch (err: any) {
@@ -50,9 +47,7 @@ export class ProductController {
                 token: req.headers.authorization as string
             }
 
-            const productBusiness = new ProductBusiness()
-            await productBusiness.editProductInfo(input)
-        
+            await this.productBusiness.editProductInfo(input)
             res.status(201).send('Success! Product information has been edited!')
     
         } catch (err: any) {
@@ -70,9 +65,7 @@ export class ProductController {
                 page: Number(req.query.page)
             }
     
-            const productBusiness = new ProductBusiness()
-            const result = await productBusiness.getAllProducts(input)
-
+            const result = await this.productBusiness.getAllProducts(input)
             res.status(200).send(result)
     
         } catch (err: any) {

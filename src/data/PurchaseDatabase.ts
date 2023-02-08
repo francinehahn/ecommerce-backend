@@ -1,9 +1,10 @@
 import BaseDatabase from "./BaseDatabase"
 import Purchase from "../models/Purchase"
 import { CustomError } from "../errors/CustomError"
+import { PurchaseRepository } from "../business/PurchaseRepository"
 
 
-export default class PurchaseDatabase extends BaseDatabase {
+export default class PurchaseDatabase extends BaseDatabase implements PurchaseRepository {
     TABLE_NAME = "Labecommerce_purchases"
     
     getPurchasesByUserId = async (id: string): Promise<Purchase[]> => {

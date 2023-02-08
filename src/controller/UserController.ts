@@ -1,9 +1,10 @@
 import { Request, Response } from "express"
 import { UserBusiness } from "../business/UserBusiness"
-import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO } from "../models/User"
+import { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO } from "../models/User"
 
 
 export class UserController {
+    constructor (private userBusiness: UserBusiness) {}
 
     signup = async (req: Request, res: Response): Promise<void> => {
         try {
@@ -13,9 +14,7 @@ export class UserController {
                 password: req.body.password
             }
 
-            const userBusiness = new UserBusiness()
-            const token = await userBusiness.signup(input)
-
+            const token = await this.userBusiness.signup(input)
             res.status(201).send({message: 'Success! User has been registered!', token})
 
         } catch (err: any) {
@@ -31,9 +30,7 @@ export class UserController {
                 password: req.body.password
             }
       
-            const userBusiness = new UserBusiness()
-            const token = await userBusiness.login(input)
-    
+            const token = await this.userBusiness.login(input)
             res.status(201).send({token})
     
         } catch (err: any) {
@@ -50,9 +47,7 @@ export class UserController {
                 token: req.headers.authorization as string
             }
     
-            const userBusiness = new UserBusiness()
-            await userBusiness.editUserInfo(input)
-            
+            await this.userBusiness.editUserInfo(input)
             res.status(201).send('Success! User information has been edited!')
     
         } catch (err: any) {

@@ -1,13 +1,14 @@
-import UserDatabase from "../data/UserDatabase"
 import { CustomError } from "../errors/CustomError"
 import { DuplicateEmail, EmailNotFound, IncorrectPassword, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
 import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, updateUserInfoDTO } from "../models/User"
 import { Authenticator } from "../services/Authenticator"
 import { generateId } from "../services/generateId"
 import { HashManager } from "../services/HashManager"
+import { UserRepository } from "./UserRepository"
 
 
 export class UserBusiness {
+    constructor (private userDatabase: UserRepository) {}
 
     signup = async (input: inputSignupDTO): Promise<string> => {
         try {
@@ -27,8 +28,7 @@ export class UserBusiness {
                 throw new InvalidPassword()
             }
     
-            const userDatabase = new UserDatabase()
-            const userExists = await userDatabase.getUserBy("email", input.email)
+            const userExists = await this.userDatabase.getUserBy("email", input.email)
             
             if (userExists) {
                 throw new DuplicateEmail()
@@ -40,7 +40,7 @@ export class UserBusiness {
             const id = generateId()
             const newUser = new User(id, input.name, input.email, hashPassword)
 
-            await userDatabase.signup(newUser)
+            await this.userDatabase.signup(newUser)
             
             const authenticator = new Authenticator()
             const token = await authenticator.generateToken({id})
@@ -62,8 +62,7 @@ export class UserBusiness {
                 throw new MissingPassword()
             }
     
-            const userDatabase = new UserDatabase()
-            const emailExists = await userDatabase.getUserBy("email", input.email)
+            const emailExists = await this.userDatabase.getUserBy("email", input.email)
             
             if (!emailExists) {
                 throw new EmailNotFound()
@@ -93,12 +92,10 @@ export class UserBusiness {
                 throw new MissingToken()
             }
 
-            const userDatabase = new UserDatabase()
             const authenticator = new Authenticator()
-            
             const {id} = authenticator.getTokenData(input.token)
             
-            const userExists = await userDatabase.getUserBy("id", id)
+            const userExists = await this.userDatabase.getUserBy("id", id)
 
             if (!input.email) {
                 input.email = userExists.email
@@ -106,14 +103,23 @@ export class UserBusiness {
             if (!input.password) {
                 input.password = userExists.password
             }
-    
+
+            const duplicateEmail = await this.userDatabase.getUserBy("email", input.email)
+ 
+            if (duplicateEmail && duplicateEmail.email !== userExists.email) {
+                throw new DuplicateEmail()
+            }
+
+            const hashManager = new HashManager()
+            const hashPassword: string = await hashManager.generateHash(input.password)
+
             const userInfo: updateUserInfoDTO = {
                 id,
                 email: input.email,
-                password: input.password
+                password: hashPassword
             }
 
-            await userDatabase.editUserInfo(userInfo)
+            await this.userDatabase.editUserInfo(userInfo)
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
