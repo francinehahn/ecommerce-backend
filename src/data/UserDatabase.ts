@@ -1,6 +1,6 @@
 import BaseDatabase from "./BaseDatabase"
 import User, { updateUserInfoDTO } from "../models/User"
-import ProductDatabase from "./ProductDatabase"
+import { CustomError } from "../errors/CustomError"
 
 
 export default class UserDatabase extends BaseDatabase {
@@ -10,7 +10,7 @@ export default class UserDatabase extends BaseDatabase {
         try {
             await BaseDatabase.connection(this.TABLE_NAME).insert(newUser)
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -22,7 +22,7 @@ export default class UserDatabase extends BaseDatabase {
             .where("id", userInfo.id)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -33,7 +33,7 @@ export default class UserDatabase extends BaseDatabase {
             return result[0]
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

@@ -1,4 +1,6 @@
 import UserDatabase from "../data/UserDatabase"
+import { CustomError } from "../errors/CustomError"
+import { DuplicateEmail, EmailNotFound, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
 import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, updateUserInfoDTO } from "../models/User"
 import { Authenticator } from "../services/Authenticator"
 import { generateId } from "../services/generateId"
@@ -9,23 +11,26 @@ export class UserBusiness {
     signup = async (input: inputSignupDTO): Promise<string> => {
         try {
             if (!input.name) {
-                throw new Error("Provide user name.")
+                throw new MissingUserName()
             }
             if (!input.email) {
-                throw new Error("Provide the email.")
+                throw new MissingEmail()
+            }
+            if(!input.email.includes("@") || input.email.length < 12) {
+                throw new InvalidEmail()
             }
             if (!input.password) {
-                throw new Error("Provide the password.")
+                throw new MissingPassword()
             }
             if (input.password.length < 6) {
-                throw new Error("The password must have at least 6 characters.")
+                throw new InvalidPassword()
             }
     
             const userDatabase = new UserDatabase()
             const userExists = await userDatabase.getUserBy("email", input.email)
             
             if (userExists) {
-                throw new Error("User already registered.")
+                throw new DuplicateEmail()
             }
     
             const id = generateId()
@@ -39,7 +44,7 @@ export class UserBusiness {
             return token
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -47,17 +52,17 @@ export class UserBusiness {
     login = async (input: inputLoginDTO): Promise<string> => {
         try {
             if (!input.email) {
-                throw new Error ("Provide the user email.")
+                throw new MissingEmail()
             }
             if (!input.password) {
-                throw new Error ("Provide the user password.")
+                throw new MissingPassword()
             }
     
             const userDatabase = new UserDatabase()
             const emailExists = await userDatabase.getUserBy("email", input.email)
             
             if (!emailExists) {
-                throw new Error("Email not found.")
+                throw new EmailNotFound()
             }
         
             if (input.password !== emailExists.password) {
@@ -70,13 +75,17 @@ export class UserBusiness {
             return token
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
 
     editUserInfo = async (input: inputEditUserInfoDTO): Promise<void> => {
         try {
+            if (!input.token) {
+                throw new MissingToken()
+            }
+
             const userDatabase = new UserDatabase()
             const authenticator = new Authenticator()
             
@@ -90,9 +99,6 @@ export class UserBusiness {
             if (!input.password) {
                 input.password = userExists.password
             }
-            if (!input.token) {
-                throw new Error("Provide the token.")
-            }
     
             const userInfo: updateUserInfoDTO = {
                 id,
@@ -103,7 +109,7 @@ export class UserBusiness {
             await userDatabase.editUserInfo(userInfo)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

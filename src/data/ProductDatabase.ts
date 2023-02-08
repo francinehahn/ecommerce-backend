@@ -1,5 +1,6 @@
 import BaseDatabase from "./BaseDatabase"
 import Product, { getProductsDTO, inputEditProductInfoDTO, returnProductsDTO } from "../models/Product"
+import { CustomError } from "../errors/CustomError"
 
 
 export default class ProductDatabase extends BaseDatabase {
@@ -10,7 +11,7 @@ export default class ProductDatabase extends BaseDatabase {
             return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -20,7 +21,7 @@ export default class ProductDatabase extends BaseDatabase {
             await BaseDatabase.connection(this.TABLE_NAME).insert(newProduct)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -32,7 +33,7 @@ export default class ProductDatabase extends BaseDatabase {
             .where("id", input.id)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -49,7 +50,7 @@ export default class ProductDatabase extends BaseDatabase {
             return result
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -60,7 +61,7 @@ export default class ProductDatabase extends BaseDatabase {
             return result[0]
 
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

@@ -1,4 +1,7 @@
 import ProductDatabase from "../data/ProductDatabase"
+import { CustomError } from "../errors/CustomError"
+import { InvalidOrder, InvalidPrice, MissingImageUrl, MissingPrice, MissingProductId, MissingProductName, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
+import { MissingToken, Unauthorized } from "../errors/UserErrors"
 import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder, returnProductsDTO } from "../models/Product"
 import { Authenticator } from "../services/Authenticator"
 
@@ -8,7 +11,7 @@ export class ProductBusiness {
     getProductsByUserId = async (token: string): Promise<returnProductsDTO[]> => {
         try {
             if (!token) {
-                throw new Error("Provide the token.")
+                throw new MissingToken()
             }
 
             const authenticator = new Authenticator()
@@ -18,13 +21,13 @@ export class ProductBusiness {
             const productsByUserId = await productDatabase.getProductsByUserId(id)
             
             if (productsByUserId.length === 0) {
-                throw new Error("The user has not registered any products yet.")
+                throw new NoProductsRegistered()
             }
     
             return productsByUserId
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -32,19 +35,19 @@ export class ProductBusiness {
     createProduct = async (input: inputCreateProductDTO): Promise<void> => {
         try {
             if (!input.token) {
-                throw new Error("Provide the token.")
+                throw new MissingToken()
             }
             if (!input.name) {
-                throw new Error("Provide the product name.")
+                throw new MissingProductName()
             }
             if (!input.price) {
-                throw new Error("Provide the price.")
+                throw new MissingPrice()
             }
             if (!input.imageUrl) {
-                throw new Error("Provide the image url.")
+                throw new MissingImageUrl()
             }
             if (Number(input.price) <= 0) {
-                throw new Error("Provide a valid price.")
+                throw new InvalidPrice()
             }
 
             const authenticator = new Authenticator()
@@ -56,7 +59,7 @@ export class ProductBusiness {
             await productDatabase.createProduct(newProduct)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -64,25 +67,25 @@ export class ProductBusiness {
     editProductInfo = async (input: inputEditProductInfoDTO): Promise<void> => {
         try {
             if (!input.token) {
-                throw new Error("Provide the token.")
+                throw new MissingToken()
             }
 
             const authenticator = new Authenticator()
             const {id} = await authenticator.getTokenData(input.token)
 
             if (input.id.toString() === ":id") {
-                throw new Error("Provide the product id.")   
+                throw new MissingProductId() 
             }
 
             const productDatabase = new ProductDatabase()
             const productExists = await productDatabase.getProductById(input.id)
 
             if (!productExists) {
-                throw new Error("Product not found.")
+                throw new ProductNotFound()
             }
 
             if (productExists.fk_user_id !== id) {
-                throw new Error("This user cannot edit this product.")
+                throw new Unauthorized()
             }
 
             if (!input.name) {
@@ -100,7 +103,7 @@ export class ProductBusiness {
             await productDatabase.editProductInfo(input)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -112,7 +115,7 @@ export class ProductBusiness {
             }
     
             if (input.order.toUpperCase() !== productOrder.ASC && input.order.toUpperCase() !== productOrder.DESC) {
-                throw new Error("The order must be asc or desc.")
+                throw new InvalidOrder()
             }
     
             if (!input.search) {
@@ -142,7 +145,7 @@ export class ProductBusiness {
             return result
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

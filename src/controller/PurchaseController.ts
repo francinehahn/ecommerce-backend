@@ -14,7 +14,7 @@ export class PurchaseController {
             res.status(200).send(result)
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -29,7 +29,7 @@ export class PurchaseController {
             res.status(200).send(result)
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -47,7 +47,7 @@ export class PurchaseController {
             res.status(201).send('Success! Purchase has been registered!')
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 }

@@ -1,5 +1,6 @@
 import BaseDatabase from "./BaseDatabase"
 import Purchase from "../models/Purchase"
+import { CustomError } from "../errors/CustomError"
 
 
 export default class PurchaseDatabase extends BaseDatabase {
@@ -10,7 +11,7 @@ export default class PurchaseDatabase extends BaseDatabase {
             return BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -20,7 +21,7 @@ export default class PurchaseDatabase extends BaseDatabase {
             await BaseDatabase.connection(this.TABLE_NAME).insert(newPurchase)
              
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 
@@ -30,7 +31,7 @@ export default class PurchaseDatabase extends BaseDatabase {
             return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_product_id", id)
     
         } catch (err: any) {
-            throw new Error(err.message)
+            throw new CustomError(err.statusCode, err.message)
         }
     }
 }

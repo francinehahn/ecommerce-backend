@@ -15,7 +15,7 @@ export class ProductController {
             res.status(200).send(result)
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -35,7 +35,7 @@ export class ProductController {
             res.status(201).send('Success! The product has been registerd!')
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -56,7 +56,7 @@ export class ProductController {
             res.status(201).send('Success! Product information has been edited!')
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -76,7 +76,7 @@ export class ProductController {
             res.status(200).send(result)
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 }

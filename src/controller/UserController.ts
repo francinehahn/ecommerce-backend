@@ -19,7 +19,7 @@ export class UserController {
             res.status(201).send({message: 'Success! User has been registered!', token})
 
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -37,7 +37,7 @@ export class UserController {
             res.status(201).send({token})
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 
@@ -56,7 +56,7 @@ export class UserController {
             res.status(201).send('Success! User information has been edited!')
     
         } catch (err: any) {
-            res.status(400).send(err.message)
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
 }
