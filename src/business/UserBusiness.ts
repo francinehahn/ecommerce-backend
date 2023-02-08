@@ -79,8 +79,9 @@ export class UserBusiness {
         try {
             const userDatabase = new UserDatabase()
             const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(input.token)
-
+            
+            const {id} = authenticator.getTokenData(input.token)
+            
             const userExists = await userDatabase.getUserBy("id", id)
 
             if (!input.email) {

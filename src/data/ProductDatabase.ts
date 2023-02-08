@@ -1,13 +1,13 @@
 import BaseDatabase from "./BaseDatabase"
-import Product, { getProductsDTO, inputEditProductInfoDTO } from "../models/Product"
+import Product, { getProductsDTO, inputEditProductInfoDTO, returnProductsDTO } from "../models/Product"
 
 
 export default class ProductDatabase extends BaseDatabase {
     TABLE_NAME = "Labecommerce_products"
     
-    getProductsByUserId = async (id: string) => {
+    getProductsByUserId = async (id: string): Promise<returnProductsDTO[]> => {
         try {
-            return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_userId", id)
+            return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
     
         } catch (err: any) {
             throw new Error(err.message)
@@ -15,7 +15,7 @@ export default class ProductDatabase extends BaseDatabase {
     }
 
 
-    createProduct = async (newProduct: Product) => {
+    createProduct = async (newProduct: Product): Promise<void> => {
         try {    
             await BaseDatabase.connection(this.TABLE_NAME).insert(newProduct)
     
@@ -25,7 +25,7 @@ export default class ProductDatabase extends BaseDatabase {
     }
 
 
-    editProductInfo = async (input: inputEditProductInfoDTO) => {
+    editProductInfo = async (input: inputEditProductInfoDTO): Promise<void> => {
         try {
             await BaseDatabase.connection(this.TABLE_NAME)
             .update({name: input.name, price: input.price, image_url: input.imageUrl})
@@ -37,7 +37,7 @@ export default class ProductDatabase extends BaseDatabase {
     }
 
 
-    getllProducts = async (getProducts: getProductsDTO) => {
+    getllProducts = async (getProducts: getProductsDTO): Promise<returnProductsDTO[]> => {
         try {
             const result = await BaseDatabase.connection(this.TABLE_NAME)
             .select()
@@ -54,7 +54,7 @@ export default class ProductDatabase extends BaseDatabase {
     }
 
 
-    getProductById = async (id: string) => {
+    getProductById = async (id: number): Promise<any> => {
         try {    
             const result = await BaseDatabase.connection(this.TABLE_NAME).select().where({id})
             return result[0]

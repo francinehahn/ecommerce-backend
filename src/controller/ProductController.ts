@@ -43,11 +43,11 @@ export class ProductController {
     editProductInfo = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: inputEditProductInfoDTO = {
-                id: req.params.id,
+                id: Number(req.params.id),
                 name: req.body.name,
                 price: req.body.price,
                 imageUrl: req.body.imageUrl,
-                token: req.headers.token as string
+                token: req.headers.authorization as string
             }
 
             const productBusiness = new ProductBusiness()

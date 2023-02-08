@@ -5,7 +5,7 @@ import Purchase from "../models/Purchase"
 export default class PurchaseDatabase extends BaseDatabase {
     TABLE_NAME = "Labecommerce_purchases"
     
-    getPurchasesByUserId = async (id: string) => {
+    getPurchasesByUserId = async (id: string): Promise<Purchase[]> => {
         try {    
             return BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
     
@@ -15,7 +15,7 @@ export default class PurchaseDatabase extends BaseDatabase {
     }
 
 
-    createPurchase = async (newPurchase: Purchase) => {
+    createPurchase = async (newPurchase: Purchase): Promise<void> => {
         try {
             await BaseDatabase.connection(this.TABLE_NAME).insert(newPurchase)
              
@@ -25,7 +25,7 @@ export default class PurchaseDatabase extends BaseDatabase {
     }
 
 
-    getSalesByProductId = async (id: string) => {
+    getSalesByProductId = async (id: number): Promise<any> => {
         try {
             return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_product_id", id)
     

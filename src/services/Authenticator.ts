@@ -16,7 +16,7 @@ export class Authenticator {
         return token
     }
 
-    getTokenData = (token: string): AuthenticationData => {
+    public getTokenData = (token: string): AuthenticationData => {
         try {
             const payload = jwt.verify(token, process.env.JWT_KEY as string) as AuthenticationData
             return payload

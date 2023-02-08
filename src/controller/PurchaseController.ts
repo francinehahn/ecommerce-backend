@@ -7,7 +7,7 @@ export class PurchaseController {
 
     getPurchasesByUserId = async (req: Request, res: Response): Promise<void> => {
         try {
-            const token = req.headers.token as string
+            const token = req.headers.authorization as string
         
             const purchaseBusiness = new PurchaseBusiness()
             const result = await purchaseBusiness.getPurchasesByUserId(token)

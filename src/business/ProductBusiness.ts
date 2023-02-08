@@ -1,11 +1,11 @@
 import ProductDatabase from "../data/ProductDatabase"
-import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder } from "../models/Product"
+import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder, returnProductsDTO } from "../models/Product"
 import { Authenticator } from "../services/Authenticator"
 
 
 export class ProductBusiness {
 
-    getProductsByUserId = async (token: string): Promise<any> => {
+    getProductsByUserId = async (token: string): Promise<returnProductsDTO[]> => {
         try {
             if (!token) {
                 throw new Error("Provide the token.")
@@ -68,9 +68,9 @@ export class ProductBusiness {
             }
 
             const authenticator = new Authenticator()
-            await authenticator.getTokenData(input.token)
+            const {id} = await authenticator.getTokenData(input.token)
 
-            if (!input.id) {
+            if (input.id.toString() === ":id") {
                 throw new Error("Provide the product id.")   
             }
 
@@ -79,6 +79,10 @@ export class ProductBusiness {
 
             if (!productExists) {
                 throw new Error("Product not found.")
+            }
+
+            if (productExists.fk_user_id !== id) {
+                throw new Error("This user cannot edit this product.")
             }
 
             if (!input.name) {
@@ -101,7 +105,7 @@ export class ProductBusiness {
     }
 
 
-    getAllProducts = async (input: inputGetAllProductsDTO): Promise<Product[]> => {
+    getAllProducts = async (input: inputGetAllProductsDTO): Promise<returnProductsDTO[]> => {
         try {
             if (!input.order) {
               input.order = productOrder.ASC

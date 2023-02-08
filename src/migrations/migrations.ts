@@ -24,6 +24,7 @@ const createTables = () => connection.raw(`
         fk_product_id INT NOT NULL,
         quantity INT NOT NULL,
         total_price FLOAT NOT NULL,
+        created_at DATE NOT NULL,
         FOREIGN KEY (fk_user_id) REFERENCES Labecommerce_users(id),
         FOREIGN KEY (fk_product_id) REFERENCES Labecommerce_products(id)
     );

@@ -2,13 +2,13 @@ export default class Product {
     private name: string
     private price: number
     private image_url: string
-    private fk_userId: string
+    private fk_user_id: string
 
     constructor(n: string, p: number, i: string, fk: string) {
         this.name = n
         this.price = p
         this.image_url = i
-        this.fk_userId = fk
+        this.fk_user_id = fk
     }
 }
 
@@ -20,7 +20,7 @@ export interface inputCreateProductDTO {
 }
 
 export interface inputEditProductInfoDTO {
-    id: string,
+    id: number,
     name: string,
     price: number,
     imageUrl: string,
@@ -44,4 +44,12 @@ export interface getProductsDTO {
     order: string,
     size: number,
     offset: number
+}
+
+export interface returnProductsDTO {
+    id: number,
+    name: string,
+    price: number,
+    image_url: string,
+    fk_user_id: string
 }

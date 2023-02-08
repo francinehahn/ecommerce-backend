@@ -1,13 +1,13 @@
 import ProductDatabase from "../data/ProductDatabase"
 import PurchaseDatabase from "../data/PurchaseDatabase"
-import Purchase, { inputCreatePurchaseDTO } from "../models/Purchase"
+import Purchase, { inputCreatePurchaseDTO, returnSalesDTO } from "../models/Purchase"
 import { Authenticator } from "../services/Authenticator"
 import { generateId } from "../services/generateId"
 
 
 export class PurchaseBusiness {
 
-    getPurchasesByUserId = async (token: string): Promise<any> => {
+    getPurchasesByUserId = async (token: string): Promise<Purchase[]> => {
         try {    
             if (!token) {
                 throw new Error("Provide the token.")
@@ -17,15 +17,21 @@ export class PurchaseBusiness {
             const {id} = await authenticator.getTokenData(token)
     
             const purchaseDatabase = new PurchaseDatabase()
-            return await purchaseDatabase.getPurchasesByUserId(id)
+            const result = await purchaseDatabase.getPurchasesByUserId(id)
     
+            if (result.length === 0) {
+                throw new Error("This user has not made any purchases yet.")
+            }
+
+            return result
+
         } catch (err: any) {
             throw new Error(err.message)
         }
     }
 
 
-    getSalesByUserId = async (token: string): Promise<any> => {
+    getSalesByUserId = async (token: string): Promise<returnSalesDTO[]> => {
         try {
             if (!token) {
                 throw new Error("Provide the token.")
@@ -36,7 +42,7 @@ export class PurchaseBusiness {
     
             const productDatabase = new ProductDatabase()
             const allUserProducts = await productDatabase.getProductsByUserId(id)
-            
+           
             const purchaseDatabase = new PurchaseDatabase()
     
             let arrayOfSales = []
@@ -46,9 +52,16 @@ export class PurchaseBusiness {
             }
             
             for (let i = 0; i < arrayOfSales.length; i++) {
-                const productInfo: any = await productDatabase.getProductById(arrayOfSales[i].product_id)
-                arrayOfSales[i] = {...arrayOfSales[i], product_name: productInfo[0].name}
+                const productInfo: any = await productDatabase.getProductById(arrayOfSales[i].fk_product_id)
+                console.log(productInfo)
+                arrayOfSales[i] = {...arrayOfSales[i], product_name: productInfo.name}
             }
+
+            if (arrayOfSales.length === 0) {
+                throw new Error("This user has not made any sales yet.")
+            }
+
+            return arrayOfSales
     
         } catch (err: any) {
             throw new Error(err.message)
@@ -61,7 +74,7 @@ export class PurchaseBusiness {
             if (!input.token) {
                 throw new Error("Provide the token.")            
             }
-
+            
             const authenticator = new Authenticator()
             const {id} = await authenticator.getTokenData(input.token)
     
@@ -70,10 +83,10 @@ export class PurchaseBusiness {
             }
     
             const productDatabase = new ProductDatabase()
-
+            
             for (let i = 0; i < input.products.length; i++) {
                 const productExists = await productDatabase.getProductById(input.products[i].productId)
-    
+                
                 if (!productExists) {
                     throw new Error("Product not found.")
                 }
