@@ -1,50 +1,39 @@
 import { app } from "./app"
-import { editProductInfo } from "./endpoints/editProductInfo"
-import { editUserInfo } from "./endpoints/editUserInfo"
-import { getAllProducts } from "./endpoints/getAllProducts"
-import { getAllUsers } from "./endpoints/getAllUsers"
-import { getPurchasesByUserId } from "./endpoints/getPurchasesByUserId"
-import { makePurchase } from "./endpoints/makePurchase"
-import { registerProduct } from "./endpoints/registerProduct"
-import { createAccount } from "./endpoints/createAccount"
-import { getProductsByUserId } from "./endpoints/getProductsByUserId"
-import { login } from "./endpoints/login"
-import { getSalesByUserId } from "./endpoints/getSalesByUserId"
-import { getUserById } from "./endpoints/getUserById"
+import { ProductController } from "./controller/ProductController"
+import { PurchaseController } from "./controller/PurchaseController"
+import { UserController } from "./controller/UserController"
 
+
+const userController = new UserController()
+const productController = new ProductController()
+const purchaseController = new PurchaseController()
 
 // Register a new user
-app.post('/users', createAccount)
-
-//Get All Users
-app.get('/users', getAllUsers)
-
-//Get User By Id
-app.get('/users/:id', getUserById)
-
-//Edit user info
-app.put('/users/:id/account', editUserInfo)
-
-//Get purchases by user id
-app.get('/users/:id/purchases', getPurchasesByUserId)
-
-//Get products by user id
-app.get('/users/:id/products', getProductsByUserId)
-
-//Get Sales By User Id
-app.get('/users/:id/sales', getSalesByUserId)
-
-//Register a product
-app.post('/users/:id/products', registerProduct)
-
-//Get All Products
-app.get('/products', getAllProducts)
-
-//Edit product info
-app.put('/products/:id', editProductInfo)
-
-//Make a purchase
-app.post('/purchases', makePurchase)
+app.post('/users/signup', userController.signup)
 
 //Login
-app.post('/login', login)
+app.post('/users/login', userController.login)
+
+//Edit user info
+app.put('/users/account', userController.editUserInfo)
+
+//Get products by user id
+app.get('/products/user', productController.getProductsByUserId)
+
+//Register a product
+app.post('/products', productController.createProduct)
+
+//Get All Products
+app.get('/products', productController.getAllProducts)
+
+//Edit product info
+app.put('/products/:id', productController.editProductInfo)
+
+//Get purchases by user id
+app.get('/purchases', purchaseController.getPurchasesByUserId)
+
+//Make a purchase
+app.post('/purchases', purchaseController.createPurchase)
+
+//Get Sales By User Id
+app.get('/sales', purchaseController.getSalesByUserId)

@@ -1,32 +1,42 @@
 import BaseDatabase from "./BaseDatabase"
-import User from "./User"
+import User, { updateUserInfoDTO } from "../models/User"
+import ProductDatabase from "./ProductDatabase"
 
 
 export default class UserDatabase extends BaseDatabase {
     TABLE_NAME = "Labecommerce_users"
+
+    signup = async (newUser: User) => {
+        try {
+            await BaseDatabase.connection(this.TABLE_NAME).insert(newUser)
+        } catch (err: any) {
+            throw new Error(err.message)
+        }
+    }
+
+
+    editUserInfo = async (userInfo: updateUserInfoDTO) => {
+        try {
+            await BaseDatabase.connection(this.TABLE_NAME)
+            .update({email: userInfo.email, password: userInfo.password})
+            .where("id", userInfo.id)
     
-    //Method that inserts a new user into the database
-    public async insertUser(user: User) {
-        super.create(user)
+        } catch (err: any) {
+            throw new Error(err.message)
+        }
     }
 
-    //Method that updates user information
-    public async updateInfo (id: string, column: string, info: any) {
-        super.update(id, column, info)
+
+    getUserBy = async (column: string, value: string) => {
+        try {
+            const result = await BaseDatabase.connection(this.TABLE_NAME).select().where(column, value)
+            return result[0]
+
+        } catch (err: any) {
+            throw new Error(err.message)
+        }
     }
 
-    //Method that receives an id and returns the corresponding user
-    public async getById(id: string) {
-        return super.getById(id)
-    }
-
-    //Method that receives an email and returns the corresponding user
-    public async getUserByEmail(email: string) {
-        const result = await BaseDatabase.connection.raw(`
-            SELECT * FROM ${this.TABLE_NAME} WHERE email = '${email}';
-        `)
-        return result[0]
-    }
 
     //Method that receives a token and returns the corresponding user
     public async getUserByToken(token: string) {

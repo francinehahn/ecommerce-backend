@@ -15,3 +15,13 @@ export default class Purchase {
         this.created_at = ca
     }
 }
+
+interface product {
+    productId: string,
+    quantity: number
+}
+
+export interface inputCreatePurchaseDTO {
+    products: product[],
+    token: string
+}
