@@ -41,14 +41,12 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
 
     getllProducts = async (getProducts: getProductsDTO): Promise<returnProductsDTO[]> => {
         try {
-            const result = await BaseDatabase.connection(this.TABLE_NAME)
+            return await BaseDatabase.connection(this.TABLE_NAME)
             .select()
-            .where("name", "like", getProducts.search)
+            .where("name", "like", `%${getProducts.search}%`)
             .orderBy("name", getProducts.order)
             .limit(getProducts.size)
             .offset(getProducts.offset)
-            
-            return result
 
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
