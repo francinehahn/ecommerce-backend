@@ -11,4 +11,4 @@ const userController = new UserController(userBusiness)
 
 userRouter.post("/signup", userController.signup)
 userRouter.post("/login", userController.login)
-userRouter.post("/account", userController.editUserInfo)
+userRouter.put("/account", userController.editUserInfo)
