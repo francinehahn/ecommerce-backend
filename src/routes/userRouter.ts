@@ -4,11 +4,11 @@ import { UserController } from "../controller/UserController"
 import UserDatabase from "../data/UserDatabase"
 
 
-export const userRouter = express.Router()
+export const UserRouter = express.Router()
 const userDatabase = new UserDatabase()
 const userBusiness = new UserBusiness(userDatabase)
 const userController = new UserController(userBusiness)
 
-userRouter.post('/signup', userController.signup)
-userRouter.post('/login', userController.login)
-userRouter.put('/account', userController.editUserInfo)
+UserRouter.post('/signup', userController.signup)
+UserRouter.post('/login', userController.login)
+UserRouter.put('/account', userController.editUserInfo)

@@ -1,12 +1,12 @@
 import { app } from "./app"
-import { productRouter } from "./routes/productRouter"
-import { purchaseRouter } from "./routes/purchaseRouter"
-import { userRouter } from "./routes/userRouter"
+import { ProductRouter } from "./routes/productRouter"
+import { PurchaseRouter } from "./routes/purchaseRouter"
+import { UserRouter } from "./routes/userRouter"
 
 
-app.use("/products", productRouter)
-app.use("/users", userRouter)
-app.use("/purchases", purchaseRouter)
+app.use("/products", ProductRouter)
+app.use("/users", UserRouter)
+app.use("/purchases", PurchaseRouter)
 
 
 
