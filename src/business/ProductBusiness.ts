@@ -1,5 +1,5 @@
 import { CustomError } from "../errors/CustomError"
-import { InvalidOrder, InvalidPrice, MissingImageUrl, MissingPrice, MissingProductId, MissingProductName, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
+import { InvalidOrder, InvalidPrice, MissingImageUrl, MissingPrice, MissingProductId, MissingProductName, NoProductsFound, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
 import { MissingToken, Unauthorized } from "../errors/UserErrors"
 import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder, returnProductsDTO } from "../models/Product"
 import { Authenticator } from "../services/Authenticator"
@@ -138,6 +138,10 @@ export class ProductBusiness {
             }
 
             const result = await this.productDatabase.getllProducts(getProducts)
+            if (result.length === 0) {
+                throw new NoProductsFound()
+            }
+            
             return result
     
         } catch (err: any) {

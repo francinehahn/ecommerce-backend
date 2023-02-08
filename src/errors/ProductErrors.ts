@@ -7,6 +7,12 @@ export class NoProductsRegistered extends CustomError {
     }
 }
 
+export class NoProductsFound extends CustomError {
+    constructor () {
+        super(404, "No products found with the given search parameters.")
+    }
+}
+
 export class MissingProductId extends CustomError {
     constructor () {
         super(422, "Provide the product id.")
