@@ -24,15 +24,15 @@ export interface inputLoginDTO {
 }
 
 export interface inputEditUserInfoDTO {
+    name: string,
     email: string,
-    password: string,
     token: string
 }
 
 export interface updateUserInfoDTO {
     id: string,
-    email: string,
-    password: string
+    name: string,
+    email: string
 }
 
 export interface returnUserInfoDTO {

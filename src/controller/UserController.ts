@@ -54,8 +54,8 @@ export class UserController {
     editUserInfo = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: inputEditUserInfoDTO = {
+                name: req.body.name,
                 email: req.body.email,
-                password: req.body.password,
                 token: req.headers.authorization as string
             }
     

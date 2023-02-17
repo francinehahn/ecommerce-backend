@@ -112,8 +112,6 @@ export class UserBusiness {
 
     editUserInfo = async (input: inputEditUserInfoDTO): Promise<void> => {
         try {
-            let newPassword = ""
-
             if (!input.token) {
                 throw new MissingToken()
             }
@@ -122,7 +120,11 @@ export class UserBusiness {
             const {id} = authenticator.getTokenData(input.token)
             
             const userExists = await this.userDatabase.getUserBy("id", id)
-
+            
+            if (!input.name) {
+                input.name = userExists.name
+            }
+            
             if (!input.email) {
                 input.email = userExists.email
             }
@@ -133,20 +135,10 @@ export class UserBusiness {
                 throw new DuplicateEmail()
             }
 
-            if (input.password) {
-                const hashManager = new HashManager()
-                const hashPassword: string = await hashManager.generateHash(input.password)
-                newPassword = hashPassword
-            }
-            
-            if (!input.password) {
-                newPassword = userExists.password
-            }
-
             const userInfo: updateUserInfoDTO = {
                 id,
-                email: input.email,
-                password: newPassword
+                name: input.name,
+                email: input.email
             }
 
             await this.userDatabase.editUserInfo(userInfo)

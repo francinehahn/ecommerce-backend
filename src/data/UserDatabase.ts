@@ -20,7 +20,7 @@ export default class UserDatabase extends BaseDatabase implements UserRepository
         try {
             await BaseDatabase.connection(this.TABLE_NAME)
             .where("id", userInfo.id)
-            .update({email: userInfo.email, password: userInfo.password})
+            .update({name: userInfo.name, email: userInfo.email})
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
