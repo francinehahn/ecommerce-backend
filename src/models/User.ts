@@ -34,3 +34,8 @@ export interface updateUserInfoDTO {
     email: string,
     password: string
 }
+
+export interface returnUserInfoDTO {
+    name: string,
+    email: string
+}

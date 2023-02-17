@@ -39,6 +39,18 @@ export class UserController {
     }
 
 
+    getUserInfo = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const token = req.headers.authorization as string
+            const result = await this.userBusiness.getUserInfo(token)
+            res.status(200).send(result)
+    
+        } catch (err: any) {
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
+        }
+    }
+
+
     editUserInfo = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: inputEditUserInfoDTO = {

@@ -1,6 +1,6 @@
 import { CustomError } from "../errors/CustomError"
 import { DuplicateEmail, EmailNotFound, IncorrectPassword, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
-import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, updateUserInfoDTO } from "../models/User"
+import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, returnUserInfoDTO, updateUserInfoDTO } from "../models/User"
 import { Authenticator } from "../services/Authenticator"
 import { generateId } from "../services/generateId"
 import { HashManager } from "../services/HashManager"
@@ -79,6 +79,30 @@ export class UserBusiness {
             const token = await authenticator.generateToken({id: emailExists.id})
             
             return token
+    
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+
+    getUserInfo = async (token: string): Promise<returnUserInfoDTO> => {
+        try {
+            if (!token) {
+                throw new MissingToken()
+            }
+
+            const authenticator = new Authenticator()
+            const {id} = await authenticator.getTokenData(token)
+            
+            const userExists = await this.userDatabase.getUserBy("id", id)
+
+            const result: returnUserInfoDTO = {
+                name: userExists.name,
+                email: userExists.email
+            }
+
+            return result
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
