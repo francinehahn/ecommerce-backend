@@ -8,6 +8,7 @@ https://documenter.getpostman.com/view/22375317/2s8Yt1r9BE
 
 ## ☑️Requests
 - Get All Products
+- Get User Info
 - Get Products By User Id
 - Get Purchases By User Id
 - Get Sales By User Id
