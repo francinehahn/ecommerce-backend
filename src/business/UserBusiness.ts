@@ -124,9 +124,13 @@ export class UserBusiness {
             if (!input.name) {
                 input.name = userExists.name
             }
-            
+
             if (!input.email) {
                 input.email = userExists.email
+            }
+
+            if (!input.email.includes("@")) {
+                throw new InvalidEmail()
             }
 
             const duplicateEmail = await this.userDatabase.getUserBy("email", input.email)
