@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/future4code/Barros-labEcommerce-backend20.git"
+    "url": "git+https://github.com/francinehahn/ecommerce-backend.git"
   },
   "author": "Francine Hahn",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/future4code/Barros-labEcommerce-backend20/issues"
+    "url": "https://github.com/francinehahn/ecommerce-backend/issues"
   },
-  "homepage": "https://github.com/future4code/Barros-labEcommerce-backend20#readme",
+  "homepage": "https://github.com/francinehahn/ecommerce-backend#readme",
   "devDependencies": {
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",
