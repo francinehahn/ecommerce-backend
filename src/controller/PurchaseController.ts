@@ -35,7 +35,7 @@ export class PurchaseController {
     createPurchase = async (req: Request, res: Response): Promise<void> => {
         try {
             const input: inputCreatePurchaseDTO = {
-                products: req.body.products,
+                products: req.body,
                 token: req.headers.authorization as string
             }
 
