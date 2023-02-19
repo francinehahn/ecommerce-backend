@@ -9,7 +9,7 @@ export default class PurchaseDatabase extends BaseDatabase implements PurchaseRe
     
     getPurchasesByUserId = async (id: string): Promise<Purchase[]> => {
         try {    
-            return BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
+            return BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id).orderBy("created_at", "desc")
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
@@ -29,7 +29,7 @@ export default class PurchaseDatabase extends BaseDatabase implements PurchaseRe
 
     getSalesByProductId = async (id: number): Promise<any> => {
         try {
-            return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_product_id", id)
+            return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_product_id", id).orderBy("created_at", "desc")
     
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
