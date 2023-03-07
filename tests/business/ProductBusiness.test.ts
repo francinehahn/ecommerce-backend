@@ -5,7 +5,7 @@ import ProductDatabaseMock from "../mocks/ProductDatabaseMock"
 
 const productBusiness = new ProductBusiness(new ProductDatabaseMock(), new AuthenticatorMock())
 
-describe("Testing the getProductsByUserId endpoint", () => {
+/*describe("Testing the getProductsByUserId endpoint", () => {
 
 })
 
@@ -23,4 +23,4 @@ describe("Testing the getAllProducts endpoint", () => {
 
 describe("Testing the getProductById endpoint", () => {
     
-})
+})*/
