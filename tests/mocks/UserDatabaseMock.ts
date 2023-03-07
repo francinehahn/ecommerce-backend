@@ -8,11 +8,9 @@ export default class UserDatabaseMock implements UserRepository {
         return
     }
 
-
     editUserInfo = async (userInfo: updateUserInfoDTO): Promise<void> => {
         
     }
-
 
     getUserBy = async (column: string, value: string): Promise<any> => {
         

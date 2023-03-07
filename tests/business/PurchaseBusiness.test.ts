@@ -12,6 +12,14 @@ const purchaseBusiness = new PurchaseBusiness(
     new IdGeneratorMock()
 )
 
-describe("Testing Purchase Business", () => {
+describe("Testing the getPurchaseByUserId endpoint", () => {
+    
+})
+
+describe("Testing the createPurchase endpoint", () => {
+    
+})
+
+describe("Testing the getSalesByUserId endpoint", () => {
     
 })

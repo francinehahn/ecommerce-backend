@@ -7,7 +7,7 @@ import { PurchaseRepository } from "../business/PurchaseRepository"
 export default class PurchaseDatabase extends BaseDatabase implements PurchaseRepository {
     TABLE_NAME = "Labecommerce_purchases"
     
-    getPurchasesByUserId = async (id: string): Promise<Purchase[]> => {
+    getPurchasesByUserId = async (id: string): Promise<Purchase[] | []> => {
         try {    
             return BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id).orderBy("created_at", "desc")
     

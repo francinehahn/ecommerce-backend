@@ -7,7 +7,7 @@ import { ProductRepository } from "../business/ProductRepository"
 export default class ProductDatabase extends BaseDatabase implements ProductRepository {
     TABLE_NAME = "Labecommerce_products"
     
-    getProductsByUserId = async (id: string): Promise<returnProductsDTO[]> => {
+    getProductsByUserId = async (id: string): Promise<returnProductsDTO[] | []> => {
         try {
             return await BaseDatabase.connection(this.TABLE_NAME).select().where("fk_user_id", id)
     
@@ -54,7 +54,7 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
     }
 
 
-    getProductById = async (id: number): Promise<any> => {
+    getProductById = async (id: number): Promise<returnProductsDTO | undefined> => {
         try {    
             const result = await BaseDatabase.connection(this.TABLE_NAME).select().where({id})
             return result[0]

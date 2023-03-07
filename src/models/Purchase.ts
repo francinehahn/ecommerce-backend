@@ -14,6 +14,13 @@ export default class Purchase {
         this.total_price = tp
         this.created_at = ca
     }
+
+    public getUserId () {
+        return this.fk_user_id
+    }
+    public getProductId () {
+        return this.fk_product_id
+    }
 }
 
 interface product {
