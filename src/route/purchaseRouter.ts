@@ -12,5 +12,5 @@ const purchaseBusiness = new PurchaseBusiness(purchaseDatabase, productDatabase)
 const purchaseController = new PurchaseController(purchaseBusiness)
 
 purchaseRouter.get("/sales", purchaseController.getSalesByUserId)
-purchaseRouter.get("/", purchaseController.getPurchasesByUserId)
-purchaseRouter.post("/", purchaseController.createPurchase)
+purchaseRouter.get("/purchases", purchaseController.getPurchasesByUserId)
+purchaseRouter.post("/purchases", purchaseController.createPurchase)

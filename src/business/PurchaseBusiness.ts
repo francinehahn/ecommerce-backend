@@ -54,7 +54,6 @@ export class PurchaseBusiness {
             
             for (let i = 0; i < arrayOfSales.length; i++) {
                 const productInfo: any = await this.productDatabase.getProductById(arrayOfSales[i].fk_product_id)
-                console.log(productInfo)
                 arrayOfSales[i] = {...arrayOfSales[i], product_name: productInfo.name}
             }
 
