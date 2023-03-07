@@ -1,13 +1,13 @@
 import { CustomError } from "../errors/CustomError"
 import { InvalidOrder, InvalidPrice, MissingImageUrl, MissingPrice, MissingProductId, MissingProductName, NoProductsFound, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
 import { MissingToken, Unauthorized } from "../errors/UserErrors"
+import { Iauthenticator } from "../models/Iauthenticator"
 import Product, { getProductsDTO, inputCreateProductDTO, inputEditProductInfoDTO, inputGetAllProductsDTO, productOrder, returnProductsDTO } from "../models/Product"
-import { Authenticator } from "../services/Authenticator"
 import { ProductRepository } from "./ProductRepository"
 
 
 export class ProductBusiness {
-    constructor (private productDatabase: ProductRepository) {}
+    constructor (private productDatabase: ProductRepository, private authenticator: Iauthenticator) {}
 
     getProductsByUserId = async (token: string): Promise<returnProductsDTO[]> => {
         try {
@@ -15,8 +15,7 @@ export class ProductBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(token)
+            const {id} = await this.authenticator.getTokenData(token)
     
             const productsByUserId = await this.productDatabase.getProductsByUserId(id)
             
@@ -50,8 +49,7 @@ export class ProductBusiness {
                 throw new InvalidPrice()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(input.token)
+            const {id} = await this.authenticator.getTokenData(input.token)
     
             const newProduct = new Product(input.name, input.price, input.imageUrl, id)
 
@@ -69,8 +67,7 @@ export class ProductBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(input.token)
+            const {id} = await this.authenticator.getTokenData(input.token)
 
             if (input.id.toString() === ":id") {
                 throw new MissingProductId() 

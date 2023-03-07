@@ -1,14 +1,19 @@
 import { CustomError } from "../errors/CustomError"
 import { DuplicateEmail, EmailNotFound, IncorrectPassword, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
 import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, returnUserInfoDTO, updateUserInfoDTO } from "../models/User"
-import { Authenticator } from "../services/Authenticator"
-import { generateId } from "../services/generateId"
-import { HashManager } from "../services/HashManager"
 import { UserRepository } from "./UserRepository"
+import { IhashManager } from "../models/IhashManager"
+import { Iauthenticator } from "../models/Iauthenticator"
+import { IidGenerator } from "../models/IidGenerator"
 
 
 export class UserBusiness {
-    constructor (private userDatabase: UserRepository) {}
+    constructor (
+        private userDatabase: UserRepository,
+        private hashManager: IhashManager,
+        private authenticator: Iauthenticator,
+        private idGenerator: IidGenerator
+    ) {}
 
     signup = async (input: inputSignupDTO): Promise<string> => {
         try {
@@ -34,17 +39,14 @@ export class UserBusiness {
                 throw new DuplicateEmail()
             }
     
-            const hashManager = new HashManager()
-            const hashPassword: string = await hashManager.generateHash(input.password)
+            const hashPassword: string = await this.hashManager.generateHash(input.password)
 
-            const id = generateId()
+            const id = this.idGenerator.generateId()
             const newUser = new User(id, input.name, input.email, hashPassword)
 
             await this.userDatabase.signup(newUser)
             
-            const authenticator = new Authenticator()
-            const token = await authenticator.generateToken({id})
-            
+            const token = await this.authenticator.generateToken({id})
             return token
 
         } catch (err: any) {
@@ -68,16 +70,13 @@ export class UserBusiness {
                 throw new EmailNotFound()
             }
         
-            const hashManager = new HashManager()
-            const comparePassword = await hashManager.compareHash(input.password, emailExists.password)
+            const comparePassword = await this.hashManager.compareHash(input.password, emailExists.password)
 
             if (!comparePassword) {
                 throw new IncorrectPassword()
             }
             
-            const authenticator = new Authenticator()
-            const token = await authenticator.generateToken({id: emailExists.id})
-            
+            const token = await this.authenticator.generateToken({id: emailExists.id})
             return token
     
         } catch (err: any) {
@@ -92,8 +91,7 @@ export class UserBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(token)
+            const {id} = await this.authenticator.getTokenData(token)
             
             const userExists = await this.userDatabase.getUserBy("id", id)
 
@@ -116,8 +114,7 @@ export class UserBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = authenticator.getTokenData(input.token)
+            const {id} = this.authenticator.getTokenData(input.token)
             
             const userExists = await this.userDatabase.getUserBy("id", id)
             

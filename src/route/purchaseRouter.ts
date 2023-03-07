@@ -3,12 +3,14 @@ import { PurchaseBusiness } from "../business/PurchaseBusiness"
 import { PurchaseController } from "../controller/PurchaseController"
 import ProductDatabase from "../data/ProductDatabase"
 import PurchaseDatabase from "../data/PurchaseDatabase"
+import { Authenticator } from "../services/Authenticator"
+import { IdGenerator } from "../services/IdGenerator"
 
 
 export const purchaseRouter = express.Router()
 const purchaseDatabase = new PurchaseDatabase()
 const productDatabase = new ProductDatabase()
-const purchaseBusiness = new PurchaseBusiness(purchaseDatabase, productDatabase)
+const purchaseBusiness = new PurchaseBusiness(purchaseDatabase, productDatabase, new Authenticator(), new IdGenerator())
 const purchaseController = new PurchaseController(purchaseBusiness)
 
 purchaseRouter.get("/sales", (req, res) => purchaseController.getSalesByUserId(req, res))

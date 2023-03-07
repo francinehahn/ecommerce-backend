@@ -2,15 +2,20 @@ import { CustomError } from "../errors/CustomError"
 import { MissingInputProducts, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
 import { NoSalesFound } from "../errors/PurchaseErrors"
 import { MissingToken } from "../errors/UserErrors"
+import { Iauthenticator } from "../models/Iauthenticator"
+import { IidGenerator } from "../models/IidGenerator"
 import Purchase, { inputCreatePurchaseDTO, returnSalesDTO } from "../models/Purchase"
-import { Authenticator } from "../services/Authenticator"
-import { generateId } from "../services/generateId"
 import { ProductRepository } from "./ProductRepository"
 import { PurchaseRepository } from "./PurchaseRepository"
 
 
 export class PurchaseBusiness {
-    constructor (private purchaseDatabase: PurchaseRepository, private productDatabase: ProductRepository) {}
+    constructor (
+        private purchaseDatabase: PurchaseRepository,
+        private productDatabase: ProductRepository,
+        private authenticator: Iauthenticator,
+        private idGenerator: IidGenerator
+    ) {}
 
     getPurchasesByUserId = async (token: string): Promise<Purchase[]> => {
         try {    
@@ -18,8 +23,7 @@ export class PurchaseBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(token)
+            const {id} = await this.authenticator.getTokenData(token)
     
             const result = await this.purchaseDatabase.getPurchasesByUserId(id)
     
@@ -41,8 +45,7 @@ export class PurchaseBusiness {
                 throw new MissingToken()
             }
 
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(token)
+            const {id} = await this.authenticator.getTokenData(token)
     
             const allUserProducts = await this.productDatabase.getProductsByUserId(id)
     
@@ -75,8 +78,7 @@ export class PurchaseBusiness {
                 throw new MissingToken()          
             }
             
-            const authenticator = new Authenticator()
-            const {id} = await authenticator.getTokenData(input.token)
+            const {id} = await this.authenticator.getTokenData(input.token)
     
             if (!input.products) {
                 throw new MissingInputProducts()
@@ -89,7 +91,7 @@ export class PurchaseBusiness {
                     throw new ProductNotFound()
                 }
     
-                const purchaseId = generateId()
+                const purchaseId = this.idGenerator.generateId()
                 const totalPrice = Number(input.products[i].quantity) * Number(productExists.price)
     
                 let today = new Date()

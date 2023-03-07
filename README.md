@@ -1,7 +1,7 @@
 <h1 align="center">API Rest LabeCommerce</h1>
 
 ##  ℹ️About
-API REST developed with the objective of simulating an e-commerce and practicing data architecture, user authentication and cryptography. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
+API REST developed with the objective of simulating an e-commerce and practicing data architecture, user authentication, cryptography and unitary tests. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
 
 ## 🔗Documentation
 https://documenter.getpostman.com/view/22375317/2s8Yt1r9BE
@@ -25,6 +25,7 @@ https://documenter.getpostman.com/view/22375317/2s8Yt1r9BE
 - Express.js
 - Knex.js
 - MySQL
+- Jest.js
 
 ## 🛰Running the project
 <pre>

@@ -1,9 +1,10 @@
 import * as bcrypt from "bcryptjs"
 import dotenv from "dotenv"
+import { IhashManager } from "../models/IhashManager"
 
 dotenv.config()
 
-export class HashManager {
+export class HashManager implements IhashManager {
     generateHash = async (plaintext: string): Promise<string> => {
         const cost: number = Number(process.env.BCRYPT_COST)
         const salt: string = await bcrypt.genSalt(cost)

@@ -2,10 +2,11 @@ import dotenv from "dotenv"
 import * as jwt from "jsonwebtoken"
 import { Unauthorized } from "../errors/UserErrors"
 import { AuthenticationData } from "../models/AuthenticationData"
+import { Iauthenticator } from "../models/Iauthenticator"
 
 dotenv.config()
 
-export class Authenticator {
+export class Authenticator implements Iauthenticator {
     public generateToken = ({id}: AuthenticationData): string => {
         const token = jwt.sign(
             {id},
