@@ -49,6 +49,12 @@ export class ProductNotFound extends CustomError {
     }
 }
 
+export class InvalidQuantity extends CustomError {
+    constructor () {
+        super(422, "The product quantity cannot be less than or equal to zero.")
+    }
+}
+
 export class InvalidOrder extends CustomError {
     constructor () {
         super(422, "The order must be asc or desc.")
@@ -58,12 +64,6 @@ export class InvalidOrder extends CustomError {
 export class MissingInputProducts extends CustomError {
     constructor () {
         super(422, "Provide the product id and the quantity of each product.")
-    }
-}
-
-export class InvalidQuantity extends CustomError {
-    constructor () {
-        super(422, "The product quantity cannot be less than or equal to zero.")
     }
 }
 
