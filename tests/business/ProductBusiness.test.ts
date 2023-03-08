@@ -39,7 +39,7 @@ describe("Testing the getProductsByUserId endpoint", () => {
             await productBusiness.getProductsByUserId("token")
         } catch (error: any) {
             expect(error).toBeInstanceOf(CustomError)
-            expect(error.statusCode).toBe(422)
+            expect(error.statusCode).toBe(404)
             expect(error.message).toBe("The user has not registered any products yet.")
         }
     })

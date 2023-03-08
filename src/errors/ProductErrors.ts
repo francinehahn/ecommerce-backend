@@ -3,7 +3,7 @@ import { CustomError } from "./CustomError"
 
 export class NoProductsRegistered extends CustomError {
     constructor () {
-        super(422, "The user has not registered any products yet.")
+        super(404, "The user has not registered any products yet.")
     }
 }
 
@@ -58,6 +58,12 @@ export class InvalidOrder extends CustomError {
 export class MissingInputProducts extends CustomError {
     constructor () {
         super(422, "Provide the product id and the quantity of each product.")
+    }
+}
+
+export class InvalidQuantity extends CustomError {
+    constructor () {
+        super(422, "The product quantity cannot be less than or equal to zero.")
     }
 }
 

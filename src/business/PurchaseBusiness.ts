@@ -1,6 +1,6 @@
 import { CustomError } from "../errors/CustomError"
-import { MissingInputProducts, NoProductsRegistered, ProductNotFound } from "../errors/ProductErrors"
-import { NoSalesFound } from "../errors/PurchaseErrors"
+import { InvalidQuantity, MissingInputProducts, ProductNotFound } from "../errors/ProductErrors"
+import { NoSalesFound, NoPurchasesFound } from "../errors/PurchaseErrors"
 import { MissingToken } from "../errors/UserErrors"
 import { Iauthenticator } from "../models/Iauthenticator"
 import { IidGenerator } from "../models/IidGenerator"
@@ -28,7 +28,7 @@ export class PurchaseBusiness {
             const result = await this.purchaseDatabase.getPurchasesByUserId(id)
     
             if (result.length === 0) {
-                throw new NoProductsRegistered()
+                throw new NoPurchasesFound()
             }
 
             return result
@@ -89,6 +89,10 @@ export class PurchaseBusiness {
                 
                 if (!productExists) {
                     throw new ProductNotFound()
+                }
+
+                if (input.products[i].quantity <= 0) {
+                    throw new InvalidQuantity()
                 }
     
                 const purchaseId = this.idGenerator.generateId()
