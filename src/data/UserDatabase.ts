@@ -1,5 +1,5 @@
 import BaseDatabase from "./BaseDatabase"
-import User, { updateUserInfoDTO } from "../models/User"
+import User, { updatePasswordDTO, updateUserInfoDTO } from "../models/User"
 import { CustomError } from "../errors/CustomError"
 import { UserRepository } from "../business/UserRepository"
 
@@ -33,6 +33,17 @@ export default class UserDatabase extends BaseDatabase implements UserRepository
             const result = await BaseDatabase.connection(this.TABLE_NAME).select().where(column, value)
             return result[0]
 
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+
+    recoverPassword = async (updatePassword: updatePasswordDTO): Promise<void> => {
+        try {
+            await BaseDatabase.connection(this.TABLE_NAME)
+            .where("id", updatePassword.id)
+            .update("password", updatePassword.password)
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }

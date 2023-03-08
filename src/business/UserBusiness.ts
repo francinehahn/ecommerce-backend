@@ -1,10 +1,12 @@
 import { CustomError } from "../errors/CustomError"
 import { DuplicateEmail, EmailNotFound, IncorrectPassword, InvalidEmail, InvalidPassword, MissingEmail, MissingPassword, MissingToken, MissingUserName } from "../errors/UserErrors"
-import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, returnUserInfoDTO, updateUserInfoDTO } from "../models/User"
+import User, { inputEditUserInfoDTO, inputLoginDTO, inputSignupDTO, returnUserInfoDTO, updatePasswordDTO, updateUserInfoDTO } from "../models/User"
 import { UserRepository } from "./UserRepository"
 import { IhashManager } from "../models/IhashManager"
 import { Iauthenticator } from "../models/Iauthenticator"
 import { IidGenerator } from "../models/IidGenerator"
+import { MailTransporter } from "../services/MailTransporter"
+import { PasswordGenerator } from "../services/PasswordGenerator"
 
 
 export class UserBusiness {
@@ -144,6 +146,41 @@ export class UserBusiness {
 
             await this.userDatabase.editUserInfo(userInfo)
     
+        } catch (err: any) {
+            throw new CustomError(err.statusCode, err.message)
+        }
+    }
+
+
+    recoverPassword = async (email: string): Promise<void> => {
+        try {
+            if (!email) {
+                throw new MissingEmail()
+            }
+        
+            const emailExists = await this.userDatabase.getUserBy("email", email)
+            if (!emailExists) {
+                throw new EmailNotFound()
+            }
+
+            const newPassword = new PasswordGenerator().generatePassword()
+            const hashPassword = await this.hashManager.generateHash(newPassword)
+
+            const updatePassword: updatePasswordDTO = {
+                id: emailExists.id,
+                password: hashPassword
+            }
+
+            await this.userDatabase.recoverPassword(updatePassword)
+            
+            await new MailTransporter().createTransport().sendMail({
+                from: process.env.NODEMAILER_USER,
+                to: email,
+                subject: "Cookenu - Recuperação de senha",
+                text: `Conforme solicitado, segue a nova senha gerada: ${newPassword}`,
+                html: `<p>Conforme solicitado, segue a nova senha gerada: ${newPassword}</p>`
+            })
+
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }

@@ -66,4 +66,17 @@ export class UserController {
             res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
         }
     }
+
+
+    recoverPassword = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const email = req.body.email
+
+            await this.userBusiness.recoverPassword(email)
+            res.status(201).send("Success! An e-mail has been sent to the user.")
+            
+        } catch (err: any) {
+            res.status(err.statusCode || 400).send(err.message || err.sqlMessage)
+        }
+    }
 }

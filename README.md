@@ -51,6 +51,9 @@ Create a file .env and complete the following variables:
     PORT = 3003
     JWT_KEY = "labecommerce"
     BCRYPT_COST = 12
+
+    NODEMAILER_USER = your email address
+    NODEMAILER_PASS = your email password
   </code>
 </pre>
 

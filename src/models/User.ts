@@ -39,3 +39,8 @@ export interface returnUserInfoDTO {
     name: string,
     email: string
 }
+
+export interface updatePasswordDTO {
+    id: string,
+    password: string
+}
