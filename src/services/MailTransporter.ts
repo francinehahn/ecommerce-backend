@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
+import { ImailTransporter } from "../models/ImailTransporter"
 
 dotenv.config()
 
-export class MailTransporter {
+export class MailTransporter implements ImailTransporter {
     public createTransport () {
         return nodemailer.createTransport({
             host: "smtp-mail.outlook.com",

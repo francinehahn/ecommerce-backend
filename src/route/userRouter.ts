@@ -5,11 +5,20 @@ import UserDatabase from "../data/UserDatabase"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
+import { MailTransporter } from "../services/MailTransporter"
+import { PasswordGenerator } from "../services/PasswordGenerator"
 
 
 export const userRouter = express.Router()
 const userDatabase = new UserDatabase()
-const userBusiness = new UserBusiness(userDatabase, new HashManager(), new Authenticator(), new IdGenerator())
+const userBusiness = new UserBusiness(
+    userDatabase,
+    new HashManager(),
+    new Authenticator(),
+    new IdGenerator(),
+    new PasswordGenerator(),
+    new MailTransporter()
+)
 const userController = new UserController(userBusiness)
 
 userRouter.post("/signup", (req, res) => userController.signup(req, res))

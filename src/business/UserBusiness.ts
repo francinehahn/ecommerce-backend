@@ -6,7 +6,8 @@ import { IhashManager } from "../models/IhashManager"
 import { Iauthenticator } from "../models/Iauthenticator"
 import { IidGenerator } from "../models/IidGenerator"
 import { MailTransporter } from "../services/MailTransporter"
-import { PasswordGenerator } from "../services/PasswordGenerator"
+import { IpasswordGenerator } from "../models/IpasswordGenerator"
+import { ImailTransporter } from "../models/ImailTransporter"
 
 
 export class UserBusiness {
@@ -14,7 +15,9 @@ export class UserBusiness {
         private userDatabase: UserRepository,
         private hashManager: IhashManager,
         private authenticator: Iauthenticator,
-        private idGenerator: IidGenerator
+        private idGenerator: IidGenerator,
+        private passwordGenerator: IpasswordGenerator,
+        private mailTransporter: ImailTransporter
     ) {}
 
     signup = async (input: inputSignupDTO): Promise<string> => {
@@ -163,7 +166,7 @@ export class UserBusiness {
                 throw new EmailNotFound()
             }
 
-            const newPassword = new PasswordGenerator().generatePassword()
+            const newPassword = await this.passwordGenerator.generatePassword()
             const hashPassword = await this.hashManager.generateHash(newPassword)
 
             const updatePassword: updatePasswordDTO = {
@@ -173,7 +176,7 @@ export class UserBusiness {
 
             await this.userDatabase.recoverPassword(updatePassword)
             
-            await new MailTransporter().createTransport().sendMail({
+            await this.mailTransporter.createTransport().sendMail({
                 from: process.env.NODEMAILER_USER,
                 to: email,
                 subject: "Cookenu - Recuperação de senha",
