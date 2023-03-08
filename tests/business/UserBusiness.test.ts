@@ -3,6 +3,8 @@ import { CustomError } from "../../src/errors/CustomError"
 import { AuthenticatorMock } from "../mocks/AuthenticatorMock"
 import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
+import { MailTransporterMock } from "../mocks/MailTransporterMock"
+import { PasswordGeneratorMock } from "../mocks/PasswordGeneratorMock"
 import UserDatabaseMock from "../mocks/UserDatabaseMock"
 
 
@@ -10,7 +12,9 @@ const userBusiness = new UserBusiness(
     new UserDatabaseMock(),
     new HashManagerMock(),
     new AuthenticatorMock(),
-    new IdGeneratorMock()
+    new IdGeneratorMock(),
+    new PasswordGeneratorMock(),
+    new MailTransporterMock()
 )
 
 describe("Testing the signup endpoint", () => {
@@ -186,5 +190,36 @@ describe("Testing the editUserInfo endpoint", () => {
             expect(error.statusCode).toBe(401)
             expect(error.message).toBe("Unauthorized user.")
         }
+    })
+})
+
+describe("Testing the recoverPassword endpoint", () => {
+    test("Should not receive the email and return a custom error", async () => {
+        expect.assertions(3)
+
+        try {
+            await userBusiness.recoverPassword("")
+        } catch (error: any) {
+            expect(error).toBeInstanceOf(CustomError)
+            expect(error.statusCode).toBe(422)
+            expect(error.message).toBe("Provide the email.")
+        }
+    })
+
+    test("Should receive an email that is not registered in the database and return a custom error", async () => {
+        expect.assertions(3)
+
+        try {
+            await userBusiness.recoverPassword("teste@teste.com")
+        } catch (error: any) {
+            expect(error).toBeInstanceOf(CustomError)
+            expect(error.statusCode).toBe(404)
+            expect(error.message).toBe("Email not found.")
+        }
+    })
+
+    test("Should receive a valid email and return a success message", async () => {
+        const result = await userBusiness.recoverPassword("emailteste@gmail.com")
+        expect(result).toBe("Sent email.") 
     })
 })
