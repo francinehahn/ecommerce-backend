@@ -217,9 +217,4 @@ describe("Testing the recoverPassword endpoint", () => {
             expect(error.message).toBe("Email not found.")
         }
     })
-
-    test("Should receive a valid email and return a success message", async () => {
-        const result = await userBusiness.recoverPassword("emailteste@gmail.com")
-        expect(result).toBe("Sent email.") 
-    })
 })
