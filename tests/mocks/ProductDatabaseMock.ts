@@ -15,7 +15,12 @@ export default class ProductDatabaseMock implements ProductRepository {
     editProductInfo = async (input: inputEditProductInfoDTO): Promise<void> => {}
 
     getllProducts = async (getProducts: getProductsDTO): Promise<returnProductsDTO[]> => {
-        return ProductsMock
+        if (getProducts.search === "") {
+            return ProductsMock
+        } else {
+            const filter = ProductsMock.filter(item => item.name === getProducts.search)
+            return filter
+        }
     }
 
     getProductById = async (id: number): Promise<returnProductsDTO | undefined> => {

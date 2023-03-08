@@ -1,5 +1,11 @@
 export const UsersMock = [
     {
+        id: "id",
+        name: "Nome teste",
+        email: "emailteste@gmail.com",
+        password: "123456"
+    },
+    {
         id: "09e4fb34-1e4d-4037-8ff1-539f03dff6ab",
         name: "Marília Pereira",
         email: "mariliapereira@gmail.com",
