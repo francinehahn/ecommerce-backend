@@ -42,3 +42,12 @@ export interface returnSalesDTO {
     created_at: Date,
     product_name: string
 }
+
+export interface outputGetPurchasesByUserId {
+    id: string,
+    fk_user_id: string,
+    product_name: string,
+    quantity: number,
+    total_price: number,
+    created_at: Date
+}

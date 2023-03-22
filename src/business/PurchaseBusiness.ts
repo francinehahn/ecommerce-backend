@@ -4,7 +4,7 @@ import { NoSalesFound, NoPurchasesFound } from "../errors/PurchaseErrors"
 import { MissingToken } from "../errors/UserErrors"
 import { Iauthenticator } from "../models/Iauthenticator"
 import { IidGenerator } from "../models/IidGenerator"
-import Purchase, { inputCreatePurchaseDTO, returnSalesDTO } from "../models/Purchase"
+import Purchase, { inputCreatePurchaseDTO, outputGetPurchasesByUserId, returnSalesDTO } from "../models/Purchase"
 import { ProductRepository } from "./ProductRepository"
 import { PurchaseRepository } from "./PurchaseRepository"
 
@@ -17,7 +17,7 @@ export class PurchaseBusiness {
         private idGenerator: IidGenerator
     ) {}
 
-    getPurchasesByUserId = async (token: string): Promise<Purchase[]> => {
+    getPurchasesByUserId = async (token: string): Promise<outputGetPurchasesByUserId[]> => {
         try {    
             if (!token) {
                 throw new MissingToken()
