@@ -98,8 +98,8 @@ export class PurchaseBusiness {
                 const purchaseId = this.idGenerator.generateId()
                 const totalPrice = Number(input.products[i].quantity) * Number(productExists.price)
     
-                let today = new Date()
-                today = new Date(`${today.getFullYear()}, ${today.getMonth() + 1}, ${today.getDate()}`)
+                let today: any = new Date().toLocaleDateString("pt-br").split("/").reverse().join(",")
+                today = new Date(today)
 
                 const newPurchase = new Purchase(
                     purchaseId,
