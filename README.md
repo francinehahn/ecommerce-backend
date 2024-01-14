@@ -3,6 +3,9 @@
 ##  ℹ️About
 API REST developed with the objective of simulating an e-commerce and practicing data architecture, user authentication, cryptography and unitary tests. CRUD (Create, Read, Update and Delete) requests were built respecting the semantics and organization necessary for the elaboration of an API with RESTful principles.
 
+## 🌐Deploy
+https://ecommerce-backend-eta.vercel.app
+
 ## 🔗Documentation
 https://documenter.getpostman.com/view/22375317/2s8Yt1r9BE
 
