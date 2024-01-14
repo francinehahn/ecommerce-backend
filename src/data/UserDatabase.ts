@@ -15,7 +15,6 @@ export default class UserDatabase extends BaseDatabase implements UserRepository
         }
     }
 
-
     editUserInfo = async (userInfo: updateUserInfoDTO): Promise<void> => {
         try {
             await BaseDatabase.connection(this.TABLE_NAME)
@@ -27,7 +26,6 @@ export default class UserDatabase extends BaseDatabase implements UserRepository
         }
     }
 
-
     getUserBy = async (column: string, value: string): Promise<any> => {
         try {
             const result = await BaseDatabase.connection(this.TABLE_NAME).select().where(column, value)
@@ -37,7 +35,6 @@ export default class UserDatabase extends BaseDatabase implements UserRepository
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     recoverPassword = async (updatePassword: updatePasswordDTO): Promise<void> => {
         try {

@@ -1,6 +1,5 @@
 import Product, { getProductsDTO, inputEditProductInfoDTO, returnProductsDTO } from "../models/Product"
 
-
 export interface ProductRepository {
     getProductsByUserId (id: string): Promise<returnProductsDTO[] | []>
     createProduct (newProduct: Product): Promise<void>

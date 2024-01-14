@@ -20,7 +20,6 @@ export default class PurchaseDatabase extends BaseDatabase implements PurchaseRe
         }
     }
 
-
     createPurchase = async (newPurchase: Purchase): Promise<void> => {
         try {
             await BaseDatabase.connection(this.TABLE_NAME).insert(newPurchase)
@@ -29,7 +28,6 @@ export default class PurchaseDatabase extends BaseDatabase implements PurchaseRe
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     getSalesByProductId = async (id: number): Promise<any> => {
         try {

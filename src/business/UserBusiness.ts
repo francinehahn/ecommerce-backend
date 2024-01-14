@@ -5,10 +5,8 @@ import { UserRepository } from "./UserRepository"
 import { IhashManager } from "../models/IhashManager"
 import { Iauthenticator } from "../models/Iauthenticator"
 import { IidGenerator } from "../models/IidGenerator"
-import { MailTransporter } from "../services/MailTransporter"
 import { IpasswordGenerator } from "../models/IpasswordGenerator"
 import { ImailTransporter } from "../models/ImailTransporter"
-
 
 export class UserBusiness {
     constructor (
@@ -58,7 +56,6 @@ export class UserBusiness {
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     login = async (input: inputLoginDTO): Promise<string> => {
         try {

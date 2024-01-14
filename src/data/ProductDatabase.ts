@@ -16,7 +16,6 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
         }
     }
 
-
     createProduct = async (newProduct: Product): Promise<void> => {
         try {    
             await BaseDatabase.connection(this.TABLE_NAME).insert(newProduct)
@@ -25,7 +24,6 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     editProductInfo = async (input: inputEditProductInfoDTO): Promise<void> => {
         try {
@@ -37,7 +35,6 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     getllProducts = async (getProducts: getProductsDTO): Promise<returnProductsDTO[]> => {
         try {
@@ -52,7 +49,6 @@ export default class ProductDatabase extends BaseDatabase implements ProductRepo
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     getProductById = async (id: number): Promise<returnProductsDTO | undefined> => {
         try {    

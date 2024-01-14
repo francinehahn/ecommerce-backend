@@ -24,12 +24,10 @@ export class ProductBusiness {
             }
     
             return productsByUserId
-    
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     createProduct = async (input: inputCreateProductDTO): Promise<void> => {
         try {
@@ -50,11 +48,9 @@ export class ProductBusiness {
             }
 
             const {id} = await this.authenticator.getTokenData(input.token)
-    
             const newProduct = new Product(input.name, input.price, input.imageUrl, id)
 
             await this.productDatabase.createProduct(newProduct)
-    
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }
@@ -96,12 +92,10 @@ export class ProductBusiness {
             }
 
             await this.productDatabase.editProductInfo(input)
-    
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }
     }
-
 
     getAllProducts = async (input: inputGetAllProductsDTO): Promise<returnProductsDTO[]> => {
         try {
@@ -140,7 +134,6 @@ export class ProductBusiness {
             }
             
             return result
-    
         } catch (err: any) {
             throw new CustomError(err.statusCode, err.message)
         }
